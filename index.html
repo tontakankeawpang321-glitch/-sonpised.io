@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Tutor Connect | ค้นหาครูสอนพิเศษออนไลน์</title>
+<title>Tutor Connect | แพลตฟอร์มค้นหาติวเตอร์มืออาชีพ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,13 +13,14 @@
 
 <style>
     :root {
-        --primary: #3b82f6; 
-        --secondary: #1d4ed8; 
-        --accent: #0ea5e9; 
-        --bg-dark: #0f172a; 
-        --bg-card: #1e293b; 
-        --text-main: #f1f5f9; 
+        --primary: #2563eb; 
+        --secondary: #1e40af; 
+        --accent: #38bdf8; 
+        --bg-dark: #020617; 
+        --bg-card: #0f172a; 
+        --text-main: #f8fafc; 
         --text-muted: #94a3b8; 
+        --border-color: rgba(255, 255, 255, 0.1);
     }
 
     body { 
@@ -28,6 +29,7 @@
         color: var(--text-main); 
         -webkit-tap-highlight-color: transparent; 
         overflow-x: hidden;
+        letter-spacing: -0.01em;
     }
 
     body.no-scroll { overflow: hidden; }
@@ -37,48 +39,61 @@
     ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
     
     dialog {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         opacity: 0;
-        transform: scale(0.95) translateY(10px);
+        transform: scale(0.98) translateY(5px);
         border: none;
         outline: none;
         background-color: var(--bg-card);
         color: var(--text-main);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
     dialog[open] { opacity: 1; transform: scale(1) translateY(0); }
-    dialog::backdrop { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); }
     
     .transition-all-300 { transition: all 0.3s ease; }
-    .slider-hidden { opacity: 0; pointer-events: none; transform: scale(1.1); }
+    .slider-hidden { opacity: 0; pointer-events: none; transform: scale(1.05); }
     .slider-visible { opacity: 1; pointer-events: auto; transform: scale(1); }
-    .btn-animate:active { transform: scale(0.96); }
+    .btn-animate:active { transform: scale(0.97); }
     
     .glass-nav { 
-        background: rgba(15, 23, 42, 0.8); 
-        backdrop-filter: blur(12px); 
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(2, 6, 23, 0.85); 
+        backdrop-filter: blur(16px); 
+        border-bottom: 1px solid var(--border-color);
     }
 
     input, select, textarea {
-        background-color: #334155 !important;
+        background-color: #1e293b !important;
         color: var(--text-main) !important;
-        border: 1px solid #475569 !important;
+        border: 1px solid #334155 !important;
         transition: all 0.2s ease;
+        border-radius: 0.75rem !important;
     }
     input:focus, select:focus, textarea:focus {
-        border-color: var(--accent) !important;
-        box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
         outline: none;
     }
 
     .field-error { border-color: #ef4444 !important; background-color: #450a0a !important; }
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-
+    
+    .tutor-card {
+        border: 1px solid var(--border-color);
+        background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+    }
     .tutor-card:hover {
         border-color: var(--primary);
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+        background: linear-gradient(180deg, rgba(37,99,235,0.05) 0%, rgba(255,255,255,0) 100%);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
+    }
+    .btn-primary:hover {
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.23);
     }
 </style>
 </head>
@@ -88,34 +103,34 @@
 <nav class="glass-nav sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
       <div class="flex items-center gap-3 cursor-pointer group" onclick="refreshApp()">
-        <div class="bg-gradient-to-tr from-[#1d4ed8] to-[#38bdf8] text-white p-2.5 rounded-2xl shadow-lg group-hover:rotate-6 transition-all-300">
+        <div class="bg-primary text-white p-2 rounded-xl shadow-lg transition-transform group-hover:scale-105">
             <i class="fa-solid fa-graduation-cap text-xl"></i>
         </div>
         <div class="hidden xs:block">
-            <span class="font-bold text-lg sm:text-xl text-[#38bdf8] tracking-tight block leading-none">Tutor<span class="text-white">Connect</span></span>
-            <span class="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Thailand Learning Platform</span>
+            <span class="font-bold text-lg sm:text-xl text-white tracking-tight block leading-none">Tutor<span class="text-primary">Connect</span></span>
+            <span class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.15em]">Professional Network</span>
         </div>
       </div>
       
       <!-- Desktop Actions -->
       <div class="hidden lg:flex items-center gap-4">
-         <div class="flex bg-slate-800 p-1 rounded-2xl border border-slate-700">
-             <select id="filter_province_desktop" class="bg-transparent px-4 py-2 text-sm outline-none cursor-pointer border-r border-slate-700 text-[#38bdf8] font-medium">
-                <option value="all">ทุกพื้นที่</option>
+         <div class="flex bg-slate-900/50 p-1 rounded-xl border border-slate-800">
+             <select id="filter_province_desktop" class="bg-transparent px-4 py-2 text-sm outline-none cursor-pointer border-r border-slate-800 text-slate-300 font-medium">
+                <option value="all">ทุกจังหวัด</option>
              </select>
              <div class="relative">
-                 <input id="q_desktop" type="text" placeholder="ค้นหาวิชาหรือติวเตอร์..." class="bg-transparent pl-10 pr-4 py-2 text-sm w-56 outline-none text-white">
+                 <input id="q_desktop" type="text" placeholder="ค้นหาวิชาหรือชื่อผู้สอน..." class="bg-transparent pl-10 pr-4 py-2 text-sm w-64 outline-none text-white border-none focus:ring-0">
                  <i class="fa-solid fa-search absolute left-4 top-2.5 text-slate-500"></i>
              </div>
          </div>
-         <button onclick="openNewPostModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl shadow-xl flex items-center gap-2 btn-animate font-bold transition-all-300 text-sm">
-            <i class="fa-solid fa-user-plus"></i> ลงทะเบียนติวเตอร์
+         <button onclick="openNewPostModal()" class="btn-primary text-white px-6 py-2.5 rounded-xl flex items-center gap-2 btn-animate font-semibold transition-all text-sm">
+            <i class="fa-solid fa-user-plus text-xs"></i> ลงทะเบียนติวเตอร์
          </button>
       </div>
       
       <!-- Mobile Actions -->
       <div class="lg:hidden flex items-center gap-2">
-         <button onclick="openNewPostModal()" class="bg-blue-600 text-white w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+         <button onclick="openNewPostModal()" class="btn-primary text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-transform">
             <i class="fa-solid fa-plus text-lg"></i>
          </button>
       </div>
@@ -123,235 +138,210 @@
 </nav>
 
 <!-- Mobile Filter Bar -->
-<div class="lg:hidden bg-slate-900/95 backdrop-blur-md border-b border-slate-800 p-2 sticky top-16 z-40">
+<div class="lg:hidden bg-slate-950 border-b border-slate-900 p-2.5 sticky top-16 z-40">
     <div class="flex gap-2 max-w-2xl mx-auto">
-        <select id="filter_province_mobile" class="border border-slate-700 rounded-xl px-2 py-2 text-[11px] bg-slate-800 outline-none w-[40%] font-medium text-[#38bdf8]">
+        <select id="filter_province_mobile" class="border border-slate-800 rounded-lg px-2 py-2 text-[11px] bg-slate-900 outline-none w-[40%] font-medium text-slate-300">
             <option value="all">ทุกพื้นที่</option>
         </select>
         <div class="relative w-[60%]">
-            <input id="q_mobile" type="text" placeholder="ค้นหาวิชา..." class="w-full pl-8 pr-2 py-2 bg-slate-800 border border-slate-700 rounded-xl text-[11px] outline-none text-white">
-            <i class="fa-solid fa-search absolute left-3 top-2.5 text-slate-500"></i>
+            <input id="q_mobile" type="text" placeholder="ค้นหา..." class="w-full pl-8 pr-2 py-2 bg-slate-900 border border-slate-800 rounded-lg text-[11px] outline-none text-white">
+            <i class="fa-solid fa-search absolute left-3 top-2.5 text-slate-600"></i>
         </div>
     </div>
 </div>
 
-<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-    <!-- Hero Header -->
-    <div class="mb-10 text-center lg:text-left flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-        <div>
-            <div class="inline-block bg-blue-900/40 text-blue-400 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3 border border-blue-800/50">
-                <i class="fa-solid fa-star mr-1"></i> Best Education Hub
-            </div>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">ศูนย์รวมครูสอนพิเศษ</h1>
-            <p class="text-slate-400 text-sm sm:text-xl mt-2 font-medium">ยกระดับการเรียนรู้ด้วยติวเตอร์มืออาชีพ ทั่วประเทศไทย</p>
-        </div>
-        <div class="flex justify-center lg:justify-end gap-3">
-            <div class="bg-slate-800/50 p-3 rounded-2xl border border-slate-700 text-center min-w-[100px]">
-                <p class="text-blue-400 font-bold text-xl leading-none" id="countTutors">0</p>
-                <p class="text-[9px] text-slate-500 uppercase font-bold mt-1">ติวเตอร์ทั้งหมด</p>
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+    <!-- Section Header -->
+    <div class="mb-12 border-l-4 border-primary pl-6 py-2">
+        <h1 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">ทำเนียบติวเตอร์มืออาชีพ</h1>
+        <p class="text-slate-400 text-sm sm:text-lg mt-2 font-light">คัดสรรผู้สอนที่มีคุณภาพ เพื่อผลลัพธ์การเรียนรู้ที่ดีที่สุด</p>
+        <div class="flex items-center gap-4 mt-4">
+            <div class="flex items-center gap-2 px-3 py-1 bg-slate-900 rounded-full border border-slate-800">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span class="text-[10px] font-bold text-slate-300 uppercase tracking-wider"><span id="countTutors">0</span> ติวเตอร์ที่พร้อมให้บริการ</span>
             </div>
         </div>
     </div>
     
     <div id="loading" class="flex flex-col items-center justify-center py-24">
-        <div class="w-12 h-12 border-4 border-slate-800 border-t-blue-500 rounded-full animate-spin mb-4"></div>
-        <p class="text-slate-500 font-bold text-sm tracking-wide">กำลังเข้าสู่ระบบฐานข้อมูล...</p>
+        <div class="w-10 h-10 border-2 border-slate-800 border-t-primary rounded-full animate-spin mb-4"></div>
+        <p class="text-slate-500 text-xs font-bold tracking-widest uppercase">Synchronizing Database</p>
     </div>
     
-    <section id="board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 pb-12"></section>
+    <!-- Grid -->
+    <section id="board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 sm:gap-8 pb-12"></section>
 
     <!-- Pagination -->
-    <div id="pagination" class="flex justify-center items-center gap-4 pb-16">
-        <button onclick="changePage(-1)" id="btnPrev" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center text-blue-400 hover:bg-slate-700 disabled:opacity-20 transition-all shadow-lg active:scale-90"><i class="fa-solid fa-chevron-left"></i></button>
-        <div class="bg-slate-800 px-6 py-2 rounded-xl border border-slate-700 shadow-inner">
-            <span id="pageIndicator" class="text-sm font-bold text-blue-200">1 / 1</span>
+    <div id="pagination" class="flex justify-center items-center gap-6 pb-20">
+        <button onclick="changePage(-1)" id="btnPrev" class="text-slate-400 hover:text-primary disabled:opacity-20 transition-all active:scale-90"><i class="fa-solid fa-arrow-left-long text-xl"></i></button>
+        <div class="text-xs font-bold text-slate-500 tracking-widest uppercase">
+            Page <span id="pageIndicator" class="text-white mx-2 font-mono">1 / 1</span>
         </div>
-        <button onclick="changePage(1)" id="btnNext" class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center text-blue-400 hover:bg-slate-700 disabled:opacity-20 transition-all shadow-lg active:scale-90"><i class="fa-solid fa-chevron-right"></i></button>
+        <button onclick="changePage(1)" id="btnNext" class="text-slate-400 hover:text-primary disabled:opacity-20 transition-all active:scale-90"><i class="fa-solid fa-arrow-right-long text-xl"></i></button>
     </div>
 </main>
 
-<footer class="bg-slate-950 text-slate-600 py-12 px-6 border-t border-slate-900">
-    <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
-        <div class="flex gap-6 mb-6 text-slate-800">
-            <i class="fa-solid fa-book-open text-3xl"></i>
-            <i class="fa-solid fa-chalkboard-user text-3xl"></i>
-            <i class="fa-solid fa-award text-3xl"></i>
+<footer class="bg-slate-950 text-slate-700 py-16 px-6 border-t border-slate-900">
+    <div class="max-w-7xl mx-auto flex flex-col items-center">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-4xl text-center md:text-left mb-12">
+            <div>
+                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-4">About Platform</h4>
+                <p class="text-[11px] leading-relaxed">Tutor Connect เป็นแพลตฟอร์มกลางในการเชื่อมโยงระหว่างผู้สอนและผู้เรียน เพื่อยกระดับมาตรฐานการศึกษานอกระบบในประเทศไทย</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="fa-solid fa-shield-halved text-3xl mb-4 text-slate-800"></i>
+                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest">Verified Tutors</h4>
+            </div>
+            <div class="text-center md:text-right">
+                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-4">Legal</h4>
+                <p class="text-[11px]">© 2024 Tutor Connect Solution. <br> All rights reserved.</p>
+            </div>
         </div>
-        <h3 class="text-slate-400 font-bold text-lg">Tutor Connect System</h3>
-        <p class="text-xs mt-3 max-w-lg opacity-60 leading-relaxed">
-            เชื่อมต่อความรู้ผ่านแพลตฟอร์มติวเตอร์ออนไลน์ที่ใช้งานง่ายและปลอดภัย <br>
-            สร้างสังคมแห่งการเรียนรู้ที่ทุกคนเข้าถึงได้
-        </p>
-        <div class="mt-8 text-[10px] uppercase tracking-[0.3em] font-bold opacity-30">© 2024 Smart Learning Solution</div>
     </div>
 </footer>
 
 <!-- View Detail Dialog -->
-<dialog id="viewDlg" class="rounded-[2.5rem] shadow-2xl p-0 w-[95%] max-w-2xl m-auto overflow-hidden">
-    <div class="relative h-64 sm:h-96 bg-slate-800">
-        <div id="detailImageHero" class="w-full h-full cursor-pointer overflow-hidden">
-            <img id="viewHeroImg" src="" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" onerror="handleImgError(this)">
+<dialog id="viewDlg" class="rounded-2xl w-[95%] max-w-3xl m-auto overflow-hidden">
+    <div class="grid grid-cols-1 md:grid-cols-2">
+        <div class="relative h-64 md:h-full bg-slate-950 border-r border-slate-800">
+            <div id="detailImageHero" class="w-full h-full cursor-pointer overflow-hidden">
+                <img id="viewHeroImg" src="" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" onerror="handleImgError(this)">
+            </div>
+            <div class="absolute bottom-4 left-4 right-4 flex gap-2 overflow-x-auto pb-2 no-scrollbar" id="viewImages"></div>
         </div>
         
-        <div class="absolute top-6 right-6 flex gap-3 z-10">
-            <button id="btnDeletePost" class="bg-black/40 hover:bg-red-500 backdrop-blur-md text-white w-10 h-10 rounded-2xl flex items-center justify-center transition-all shadow-xl group" title="ลบข้อมูล">
-                <i class="fa-solid fa-trash-can group-hover:rotate-12"></i>
-            </button>
-            <button onclick="closeViewModal()" class="bg-black/40 hover:bg-slate-700 backdrop-blur-md text-white w-10 h-10 rounded-2xl flex items-center justify-center transition-all shadow-xl">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-        </div>
-        
-        <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-900 to-transparent"></div>
-        <div class="absolute bottom-6 left-6 right-6 flex gap-3 overflow-x-auto pb-2 no-scrollbar" id="viewImages"></div>
-    </div>
-    
-    <div class="p-8 sm:p-10 overflow-y-auto max-h-[55vh] bg-slate-900">
-        <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
-            <div class="flex-1">
-                <h2 id="viewTitle" class="text-2xl sm:text-3xl font-bold text-white leading-tight mb-3"></h2>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-blue-600 text-white text-[10px] px-3 py-1 rounded-full font-bold flex items-center gap-1.5 shadow-lg shadow-blue-900/20">
-                        <i class="fa-solid fa-location-dot"></i> <span id="viewProvince"></span>
-                    </span>
-                    <span id="viewAddressTag" class="bg-slate-800 text-slate-300 text-[10px] px-3 py-1 rounded-full font-bold flex items-center gap-1.5 border border-slate-700">
-                        <i class="fa-solid fa-graduation-cap"></i> <span id="viewAddress"></span>
-                    </span>
+        <div class="p-8 flex flex-col bg-slate-900">
+            <div class="flex justify-between items-start mb-6">
+                <div class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black rounded uppercase tracking-tighter border border-primary/20">Official Profile</div>
+                <div class="flex gap-2">
+                    <button id="btnDeletePost" class="text-slate-600 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                    <button onclick="closeViewModal()" class="text-slate-600 hover:text-white transition-colors w-8 h-8 flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
             </div>
-            <div class="flex flex-col items-start md:items-end bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">ค่าสอนรายชั่วโมง</span>
-                <div class="flex items-baseline gap-1">
-                    <p id="viewPrice" class="text-3xl font-black text-blue-400"></p>
-                    <span class="text-xs text-slate-500 font-bold">บ./ชม.</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-            <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex items-center gap-4 transition-all hover:border-blue-500/50">
-                <div class="w-12 h-12 bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-500 flex-shrink-0"><i class="fa-solid fa-user-check text-lg"></i></div>
-                <div class="min-w-0">
-                    <p class="text-[10px] text-slate-500 font-bold uppercase">ชื่อติวเตอร์</p>
-                    <p id="viewContact" class="font-bold text-slate-100 text-base truncate"></p>
-                </div>
-            </div>
-            <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex items-center gap-4 transition-all hover:border-blue-500/50">
-                <div class="w-12 h-12 bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-500 flex-shrink-0"><i class="fa-solid fa-phone-volume text-lg"></i></div>
-                <div class="min-w-0">
-                    <p class="text-[10px] text-slate-500 font-bold uppercase">เบอร์ติดต่อ</p>
-                    <p id="viewPhoneText" class="font-bold text-slate-100 text-base truncate"></p>
-                </div>
-            </div>
-        </div>
 
-        <div class="mb-8">
-            <h4 class="text-xs font-bold text-blue-400 mb-4 flex items-center gap-2 uppercase tracking-widest">
-                <i class="fa-solid fa-file-lines"></i> รายละเอียดการสอนและประวัติ
-            </h4>
-            <div id="viewBody" class="whitespace-pre-line text-slate-300 bg-slate-800/50 p-6 rounded-2xl border border-slate-700 leading-relaxed text-sm"></div>
-            <p id="viewPublishDate" class="text-[10px] text-slate-500 mt-4 italic text-right"></p>
-        </div>
+            <h2 id="viewTitle" class="text-2xl font-bold text-white mb-2 leading-tight"></h2>
+            <div class="flex items-center gap-2 mb-8 text-slate-400 text-xs">
+                <i class="fa-solid fa-location-dot text-primary"></i>
+                <span id="viewProvince"></span>
+                <span class="mx-2 opacity-30">|</span>
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span id="viewAddress"></span>
+            </div>
 
-        <div class="flex gap-4">
-            <a id="btnCall" href="#" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 rounded-2xl text-center font-bold shadow-xl flex items-center justify-center gap-3 btn-animate transition-all hover:shadow-blue-500/20 text-base">
-                <i class="fa-solid fa-calendar-check"></i> จองเวลาเรียน
-            </a>
+            <div class="bg-slate-950/50 rounded-xl p-5 border border-slate-800 mb-8">
+                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">Service Rate</p>
+                <div class="flex items-baseline gap-2">
+                    <span id="viewPrice" class="text-3xl font-bold text-white"></span>
+                    <span class="text-slate-500 text-xs font-medium">THB / Hour</span>
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-10 overflow-y-auto max-h-48 pr-2 no-scrollbar">
+                <div>
+                    <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Qualifications & Experience</h4>
+                    <div id="viewBody" class="text-slate-300 text-xs leading-relaxed whitespace-pre-line"></div>
+                </div>
+            </div>
+
+            <div class="mt-auto pt-6 border-t border-slate-800 space-y-3">
+                <div class="flex justify-between items-center text-xs">
+                    <span class="text-slate-500">ติวเตอร์: <span id="viewContact" class="text-slate-200 ml-1"></span></span>
+                    <span id="viewPublishDate" class="text-slate-600 italic text-[10px]"></span>
+                </div>
+                <a id="btnCall" href="#" class="btn-primary w-full py-4 rounded-xl text-center font-bold text-white shadow-lg flex items-center justify-center gap-3 transition-all">
+                    <i class="fa-solid fa-phone-volume"></i> ติดต่อผู้สอน
+                </a>
+            </div>
         </div>
     </div>
 </dialog>
 
-<!-- Add/Edit Dialog -->
-<dialog id="dlg" class="rounded-[2.5rem] shadow-2xl p-0 w-[95%] max-w-xl m-auto overflow-hidden bg-slate-900">
-    <div class="px-8 py-6 border-b border-slate-800 flex justify-between items-center bg-slate-800/50">
-        <div>
-            <h3 id="dlgTitle" class="text-xl font-bold text-white flex items-center gap-3">
-                <i class="fa-solid fa-id-card text-blue-500"></i> ลงทะเบียนครูผู้สอน
-            </h3>
-        </div>
-        <button onclick="closeModal()" class="text-slate-500 hover:text-white w-10 h-10 rounded-2xl flex items-center justify-center bg-slate-800 border border-slate-700 transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
+<!-- Registration Dialog -->
+<dialog id="dlg" class="rounded-2xl w-[95%] max-w-xl m-auto overflow-hidden bg-slate-900 border border-slate-800">
+    <div class="px-8 py-6 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+        <h3 id="dlgTitle" class="text-lg font-bold text-white">แบบฟอร์มลงทะเบียนติวเตอร์</h3>
+        <button onclick="closeModal()" class="text-slate-500 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
     </div>
     
-    <div class="p-8 overflow-y-auto max-h-[70vh] space-y-6" id="formContainer">
-        <div class="space-y-4">
+    <div class="p-8 space-y-6 overflow-y-auto max-h-[70vh]">
+        <div class="grid grid-cols-1 gap-5">
             <div>
-                <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 ml-1 tracking-widest">วิชาที่รับสอน / หัวข้อประกาศ <span class="text-red-500">*</span></label>
-                <input id="title" type="text" class="w-full px-5 py-4 rounded-2xl outline-none text-sm font-medium" placeholder="เช่น ฟิสิกส์ ม.ปลาย, ติวสอบราชการ">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">วิชาที่เปิดรับสอน <span class="text-red-500">*</span></label>
+                <input id="title" type="text" class="w-full px-4 py-3 text-sm" placeholder="เช่น Advanced Calculus, IELTS 7.0+">
             </div>
             
             <div class="grid grid-cols-2 gap-4">
                  <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 ml-1 tracking-widest">จังหวัด <span class="text-red-500">*</span></label>
-                    <select id="input_province" class="w-full px-5 py-4 rounded-2xl outline-none text-sm font-medium cursor-pointer appearance-none">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">พื้นที่ให้บริการ <span class="text-red-500">*</span></label>
+                    <select id="input_province" class="w-full px-4 py-3 text-sm appearance-none">
                         <option value="">เลือกจังหวัด</option>
                     </select>
                 </div>
-                <div class="relative">
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 ml-1 tracking-widest">ค่าสอนรายชั่วโมง <span class="text-red-500">*</span></label>
-                    <input id="price" type="number" class="w-full px-5 py-4 rounded-2xl outline-none text-sm font-medium pr-16" placeholder="0">
-                    <span class="absolute right-5 bottom-4 text-[10px] font-bold text-slate-500">บ./ชม.</span>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">ค่าสอนรายชั่วโมง <span class="text-red-500">*</span></label>
+                    <input id="price" type="number" class="w-full px-4 py-3 text-sm" placeholder="ระบุตัวเลข">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 ml-1 tracking-widest">ชื่อ-นามสกุล</label>
-                    <input id="contact_name" type="text" class="w-full px-5 py-4 rounded-2xl outline-none text-sm font-medium" placeholder="ชื่อเล่นหรือชื่อจริง">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">ชื่อผู้สอน</label>
+                    <input id="contact_name" type="text" class="w-full px-4 py-3 text-sm" placeholder="ชื่อเล่นหรือชื่อจริง">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2 ml-1 tracking-widest">เบอร์ติดต่อ <span class="text-red-500">*</span></label>
-                    <input id="phone" type="tel" class="w-full px-5 py-4 rounded-2xl outline-none text-sm font-medium" placeholder="08x-xxxxxxx">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">เบอร์โทรติดต่อ <span class="text-red-500">*</span></label>
+                    <input id="phone" type="tel" class="w-full px-4 py-3 text-sm" placeholder="08x-xxxxxxx">
                 </div>
             </div>
 
-            <div class="space-y-4">
-                <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1 ml-1 tracking-widest">วุฒิการศึกษา / สถานที่สอน</label>
-                <input id="address" type="text" class="w-full px-5 py-4 rounded-2xl outline-none text-sm font-medium" placeholder="เช่น จบ ป.ตรี จุฬาฯ, สอนย่านสยาม">
-                <textarea id="body" rows="4" class="w-full px-5 py-4 rounded-2xl outline-none text-sm font-medium resize-none" placeholder="รายละเอียดเพิ่มเติม ประสบการณ์ หรือโปรโมชั่น..."></textarea>
+            <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">ประวัติและสถานที่สอน</label>
+                <input id="address" type="text" class="w-full px-4 py-3 text-sm mb-3" placeholder="สถาบันที่จบ หรือย่านที่สะดวกสอน">
+                <textarea id="body" rows="4" class="w-full px-4 py-3 text-sm resize-none" placeholder="บอกจุดเด่นของคุณ ประสบการณ์ หรือเทคนิคการสอน..."></textarea>
             </div>
         </div>
         
         <div>
-            <div class="flex justify-between items-center mb-4">
-                <label class="block text-[11px] font-bold text-slate-500 uppercase ml-1 tracking-widest">รูปภาพติวเตอร์ / ผลงาน</label>
-                <span id="imgCount" class="text-[10px] bg-slate-800 text-blue-400 px-4 py-1.5 rounded-full font-bold border border-slate-700">0 / 3</span>
+            <div class="flex justify-between items-center mb-3">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">ภาพโปรไฟล์หรือเกียรติบัตร</label>
+                <span id="imgCount" class="text-[10px] font-mono text-slate-500">0 / 3</span>
             </div>
             <div class="grid grid-cols-3 gap-3">
                 <div id="previewList" class="contents"></div>
-                <label id="uploadBtn" class="aspect-square border-2 border-dashed border-slate-700 rounded-2xl cursor-pointer bg-slate-800/50 hover:bg-slate-800 hover:border-blue-500 flex flex-col items-center justify-center text-slate-500 transition-all group">
-                    <i class="fa-solid fa-camera-retro text-2xl group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[9px] mt-2 font-bold uppercase tracking-wider">เพิ่มรูป</span>
+                <label id="uploadBtn" class="aspect-square border-2 border-dashed border-slate-800 rounded-xl cursor-pointer bg-slate-950/50 hover:bg-slate-950 hover:border-primary flex flex-col items-center justify-center text-slate-600 transition-all group">
+                    <i class="fa-solid fa-camera text-xl mb-1 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-[8px] font-bold uppercase tracking-widest">Add Image</span>
                     <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
                 </label>
             </div>
         </div>
     </div>
     
-    <div class="p-8 border-t border-slate-800 flex gap-4 bg-slate-800/50">
-        <button onclick="closeModal()" class="flex-1 px-6 py-4 border border-slate-700 rounded-2xl text-slate-400 font-bold text-sm hover:bg-slate-800 transition-colors">ยกเลิก</button>
-        <button onclick="savePost()" id="btnSave" class="flex-[2] bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-xl flex items-center justify-center gap-2 btn-animate transition-all hover:bg-blue-500 text-sm">
-            <span id="btnSaveText">ลงทะเบียนเดี๋ยวนี้</span> 
-            <i class="fa-solid fa-paper-plane ml-1"></i>
+    <div class="p-8 border-t border-slate-800 flex gap-4 bg-slate-950/30">
+        <button onclick="closeModal()" class="flex-1 px-4 py-3 text-slate-500 font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">Cancel</button>
+        <button onclick="savePost()" id="btnSave" class="btn-primary flex-[2] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg btn-animate transition-all">
+            <span id="btnSaveText">Confirm Registration</span> 
         </button>
     </div>
 </dialog>
 
 <!-- Image Slider -->
-<div id="imageSlider" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center slider-hidden transition-all duration-300 touch-none">
-    <button onclick="closeImageSlider()" class="absolute top-8 right-8 text-white w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-2xl backdrop-blur-xl z-[110] transition-colors">
+<div id="imageSlider" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center slider-hidden transition-all duration-300">
+    <button onclick="closeImageSlider()" class="absolute top-8 right-8 text-slate-500 hover:text-white w-12 h-12 flex items-center justify-center bg-white/5 rounded-full z-[110] transition-colors">
         <i class="fa-solid fa-xmark text-2xl"></i>
     </button>
     <div class="relative w-full h-full flex items-center justify-center p-6">
-        <button onclick="changeSlide(-1)" class="absolute left-8 text-white w-14 h-14 hidden md:flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-2xl z-[110]"><i class="fa-solid fa-chevron-left text-2xl"></i></button>
-        <img id="sliderMainImage" src="" class="max-w-full max-h-[80vh] object-contain rounded-3xl shadow-2xl transition-all duration-500">
-        <button onclick="changeSlide(1)" class="absolute right-8 text-white w-14 h-14 hidden md:flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-2xl z-[110]"><i class="fa-solid fa-chevron-right text-2xl"></i></button>
+        <button onclick="changeSlide(-1)" class="absolute left-8 text-white w-12 h-12 hidden md:flex items-center justify-center hover:bg-white/5 rounded-full z-[110] transition-all"><i class="fa-solid fa-chevron-left text-2xl"></i></button>
+        <img id="sliderMainImage" src="" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl transition-all duration-500">
+        <button onclick="changeSlide(1)" class="absolute right-8 text-white w-12 h-12 hidden md:flex items-center justify-center hover:bg-white/5 rounded-full z-[110] transition-all"><i class="fa-solid fa-chevron-right text-2xl"></i></button>
     </div>
     <div class="absolute bottom-12 flex flex-col items-center gap-4 z-[110]">
-        <span id="sliderCounter" class="text-white text-xs bg-white/10 px-6 py-2 rounded-full font-mono border border-white/10 backdrop-blur-md tracking-widest">1 / 1</span>
+        <span id="sliderCounter" class="text-white text-[10px] bg-white/10 px-6 py-2 rounded-full font-mono border border-white/5 tracking-widest uppercase">Image 1 / 1</span>
     </div>
 </div>
 
 <script>
+/* SYSTEM INTEGRATION */
 const API_URL = "https://script.google.com/macros/s/AKfycbz2YS70cqQL6ELVYBeIWF2FOerHqC4MiUghgptsVZshL_hRJwPabC6Pxfa1_PKXOChzGw/exec"; 
 
 const PROVINCES = ["กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง", "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์", "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี"].sort();
@@ -395,22 +385,15 @@ const dom = {
     countTutors: document.getElementById('countTutors')
 };
 
-function handleImgError(img) {
-    img.src = 'https://placehold.co/800x600/1e293b/38bdf8?text=No+Photo';
-}
-
-function setScrollLock(lock) {
-    if (lock) document.body.classList.add('no-scroll');
-    else document.body.classList.remove('no-scroll');
-}
+function handleImgError(img) { img.src = 'https://placehold.co/800x600/0f172a/334155?text=Professional+Profile'; }
+function setScrollLock(lock) { document.body.classList.toggle('no-scroll', lock); }
 
 function init() {
     populateProvinces();
     loadPosts();
     [dom.qDesktop, dom.qMobile].forEach(el => el.addEventListener('input', debounce(applyFilters, 400)));
     [dom.filterDesktop, dom.filterMobile].forEach(el => el.addEventListener('change', (e) => {
-        dom.filterDesktop.value = e.target.value;
-        dom.filterMobile.value = e.target.value;
+        dom.filterDesktop.value = dom.filterMobile.value = e.target.value;
         applyFilters();
     }));
 }
@@ -418,26 +401,21 @@ function init() {
 function populateProvinces() {
     const html = PROVINCES.map(p => `<option value="${p}">${p}</option>`).join('');
     dom.province.innerHTML = `<option value="">เลือกจังหวัด</option>${html}`;
-    dom.filterDesktop.innerHTML = `<option value="all">ทุกพื้นที่</option>${html}`;
-    dom.filterMobile.innerHTML = `<option value="all">ทุกที่</option>${html}`;
+    dom.filterDesktop.innerHTML = dom.filterMobile.innerHTML = `<option value="all">ทุกพื้นที่</option>${html}`;
 }
 
 async function loadPosts() {
     dom.loading.classList.remove('hidden');
     dom.board.innerHTML = '';
     try {
-        const cacheBuster = `?t=${Date.now()}`;
-        const res = await fetch(API_URL + cacheBuster);
+        const res = await fetch(`${API_URL}?t=${Date.now()}`);
         const data = await res.json();
         posts = (Array.isArray(data) ? data : data.data || []).map(p => {
             let imgs = [];
             try {
                 const imgData = p.images;
-                if (typeof imgData === 'string' && imgData.trim().startsWith('[')) {
-                    imgs = JSON.parse(imgData);
-                } else if (imgData && imgData !== "null") {
-                    imgs = [imgData];
-                }
+                if (typeof imgData === 'string' && imgData.trim().startsWith('[')) imgs = JSON.parse(imgData);
+                else if (imgData && imgData !== "null") imgs = [imgData];
             } catch(e) { imgs = p.images ? [p.images] : []; }
             
             imgs = imgs.map(url => {
@@ -447,14 +425,10 @@ async function loadPosts() {
                 }
                 return url;
             });
-
             return { ...p, images: imgs };
         }).reverse();
         dom.countTutors.textContent = posts.length;
-    } catch (e) { 
-        console.error("Load failed:", e);
-        posts = []; 
-    } finally {
+    } catch (e) { posts = []; } finally {
         dom.loading.classList.add('hidden');
         applyFilters();
     }
@@ -464,12 +438,9 @@ function applyFilters() {
     const q = (dom.qDesktop.value || dom.qMobile.value).toLowerCase();
     const prov = dom.filterDesktop.value;
     filteredPosts = posts.filter(p => {
-        const titleStr = String(p.title || '');
-        const bodyStr = String(p.body || '');
-        const provStr = String(p.province || '');
-        const textMatch = (titleStr + bodyStr + provStr).toLowerCase().includes(q);
-        const provMatch = prov === 'all' || p.province === prov;
-        return textMatch && provMatch;
+        const matchText = (String(p.title)+String(p.body)+String(p.province)).toLowerCase().includes(q);
+        const matchProv = prov === 'all' || p.province === prov;
+        return matchText && matchProv;
     });
     currentPage = 1;
     renderBoard();
@@ -481,33 +452,29 @@ function renderBoard() {
     const items = filteredPosts.slice(start, start + ITEMS_PER_PAGE);
     
     if (items.length === 0) {
-        dom.board.innerHTML = `<div class="col-span-full py-20 text-center text-slate-600">
-            <i class="fa-solid fa-user-slash text-4xl mb-4 block opacity-20"></i>
-            <p class="font-bold text-sm uppercase tracking-widest">ไม่พบรายชื่อติวเตอร์ในขณะนี้</p>
-        </div>`;
+        dom.board.innerHTML = `<div class="col-span-full py-20 text-center text-slate-700 italic text-sm tracking-widest">No professional records found.</div>`;
     } else {
         items.forEach(p => {
-            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x500/1e293b/38bdf8?text=Profile';
+            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x500/0f172a/334155?text=Profile';
             const card = document.createElement('div');
-            card.className = "tutor-card bg-slate-800 rounded-[1.5rem] overflow-hidden border border-slate-700 flex flex-col cursor-pointer transition-all duration-300";
+            card.className = "tutor-card rounded-xl overflow-hidden shadow-sm flex flex-col cursor-pointer transition-all duration-300 group";
             card.onclick = () => viewDetail(p.id);
             card.innerHTML = `
                 <div class="aspect-[4/5] bg-slate-900 overflow-hidden relative">
-                    <img src="${thumb}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x500/1e293b/38bdf8?text=Tutor'">
-                    <div class="absolute bottom-2 left-2 right-2 flex flex-wrap gap-1">
-                        <div class="bg-blue-600/90 backdrop-blur-md px-2 py-0.5 rounded-lg text-[9px] font-bold text-white border border-white/10">
-                            ${p.province}
-                        </div>
+                    <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/400x500/0f172a/334155?text=Profile'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+                    <div class="absolute bottom-3 left-3">
+                        <span class="bg-primary px-2 py-0.5 rounded text-[8px] font-bold text-white uppercase tracking-wider">${p.province}</span>
                     </div>
                 </div>
-                <div class="p-3 flex flex-col flex-grow">
-                    <h3 class="font-bold text-slate-100 text-[11px] sm:text-sm line-clamp-2 leading-tight mb-2 h-7 sm:h-10">${p.title}</h3>
-                    <div class="mt-auto pt-2 border-t border-slate-700/50 flex items-center justify-between">
-                        <div class="flex items-baseline gap-0.5">
-                            <span class="text-blue-400 font-black text-xs sm:text-lg">฿${Number(p.price).toLocaleString()}</span>
-                            <span class="text-[8px] text-slate-500 font-bold uppercase">/ชม.</span>
+                <div class="p-4 flex flex-col flex-grow">
+                    <h3 class="font-bold text-slate-100 text-xs sm:text-sm line-clamp-2 leading-tight mb-2 h-7 sm:h-10 group-hover:text-primary transition-colors">${p.title}</h3>
+                    <div class="mt-auto pt-3 border-t border-slate-800 flex items-center justify-between">
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-white font-black text-sm sm:text-base">฿${Number(p.price).toLocaleString()}</span>
+                            <span class="text-[8px] text-slate-600 font-bold uppercase tracking-tighter">/ hr</span>
                         </div>
-                        <i class="fa-solid fa-arrow-right text-[10px] text-slate-600"></i>
+                        <i class="fa-solid fa-arrow-right-long text-[10px] text-slate-700 group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </div>
             `;
@@ -531,18 +498,16 @@ function closeModal() { dom.dlg.close(); setScrollLock(false); }
 function viewDetail(id) {
     const p = posts.find(x => x.id === id);
     if (!p) return;
-    dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/800x600/1e293b/38bdf8?text=Profile';
+    dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/800x600/0f172a/334155?text=Profile';
     document.getElementById('viewTitle').textContent = p.title;
-    document.getElementById('viewPrice').textContent = Number(p.price).toLocaleString();
-    document.getElementById('viewContact').textContent = p.contact_name || 'ไม่ระบุชื่อ';
-    document.getElementById('viewPhoneText').textContent = p.phone || 'ไม่ระบุ';
+    document.getElementById('viewPrice').textContent = `฿${Number(p.price).toLocaleString()}`;
+    document.getElementById('viewContact').textContent = p.contact_name || '-';
+    document.getElementById('viewPhoneText').textContent = p.phone || 'N/A';
     document.getElementById('viewProvince').textContent = p.province;
-    document.getElementById('viewAddress').textContent = p.address || 'ไม่ระบุสถานที่';
-    document.getElementById('viewBody').textContent = p.body || 'ไม่มีรายละเอียดเพิ่มเติม';
-    dom.viewDate.textContent = "ลงข้อมูลเมื่อ: " + new Date(p.id).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
-    
-    const callBtn = document.getElementById('btnCall');
-    callBtn.href = p.phone ? `tel:${p.phone}` : "#";
+    document.getElementById('viewAddress').textContent = p.address || 'Flexible Location';
+    document.getElementById('viewBody').textContent = p.body || 'No additional details provided.';
+    dom.viewDate.textContent = `Published: ${new Date(p.id).toLocaleDateString('th-TH')}`;
+    document.getElementById('btnCall').href = p.phone ? `tel:${p.phone}` : "#";
     
     const imgBox = document.getElementById('viewImages');
     imgBox.innerHTML = '';
@@ -550,7 +515,7 @@ function viewDetail(id) {
     sliderImages.forEach((url, i) => {
         const img = document.createElement('img');
         img.src = url;
-        img.className = `h-12 w-16 rounded-xl object-cover border-2 transition-all cursor-pointer flex-shrink-0 ${i===0?'border-blue-500 shadow-lg shadow-blue-500/20':'border-slate-700 opacity-60'}`;
+        img.className = `h-10 w-14 rounded-lg object-cover border-2 transition-all cursor-pointer flex-shrink-0 ${i===0?'border-primary shadow-lg':'border-slate-800 opacity-50'}`;
         img.onclick = (e) => { e.stopPropagation(); openSlider(i); };
         imgBox.appendChild(img);
     });
@@ -563,30 +528,24 @@ function viewDetail(id) {
 function closeViewModal() { dom.viewDlg.close(); setScrollLock(false); }
 
 async function confirmDelete(id) {
-    // ปิด Dialog แรกทันทีเมื่อเริ่มกระบวนการลบ
     closeViewModal(); 
-    
     const res = await Swal.fire({
-        title: 'ยืนยันการลบข้อมูล?',
-        text: 'ข้อมูลโปรไฟล์ติวเตอร์จะถูกลบออกจากระบบอย่างถาวร',
+        title: 'Archive Profile?',
+        text: 'This action will permanently remove the tutor record from the active directory.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#334155',
-        confirmButtonText: 'ลบทิ้ง',
-        cancelButtonText: 'ยกเลิก',
-        background: '#1e293b',
-        color: '#f1f5f9'
+        confirmButtonText: 'Archive',
+        background: '#0f172a',
+        color: '#f8fafc'
     });
-    
     if (res.isConfirmed) {
-        Swal.fire({ title: 'กำลังลบ...', allowOutsideClick: false, background: '#1e293b', color: '#f1f5f9', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'Processing...', allowOutsideClick: false, background: '#0f172a', color: '#f8fafc', didOpen: () => Swal.showLoading() });
         try {
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
-            setTimeout(() => { loadPosts(); Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1500, showConfirmButton: false, background: '#1e293b', color: '#f1f5f9' }); }, 1000);
-        } catch (e) { Swal.fire('Error', 'ไม่สามารถลบข้อมูลได้', 'error'); }
-    } else {
-        // หากยกเลิก อาจเลือกที่จะเปิดกลับมา หรือไม่เปิดก็ได้ตามดีไซน์นี้ขอไม่เปิดกลับเพื่อความคลีน
+            setTimeout(() => { loadPosts(); Swal.fire({ icon: 'success', title: 'Archived', background: '#0f172a', color: '#f8fafc', showConfirmButton: false, timer: 1500 }); }, 1000);
+        } catch (e) { Swal.fire('Error', 'Archive process failed.', 'error'); }
     }
 }
 
@@ -603,9 +562,9 @@ function renderPreview() {
     dom.imgPreview.innerHTML = '';
     formImages.forEach((src, i) => {
         const div = document.createElement('div');
-        div.className = "relative aspect-square rounded-2xl overflow-hidden border border-slate-700 shadow-lg";
+        div.className = "relative aspect-square rounded-xl overflow-hidden border border-slate-800 shadow-md";
         div.innerHTML = `<img src="${src}" class="w-full h-full object-cover">
-            <button onclick="removeImg(${i})" class="absolute top-1.5 right-1.5 bg-red-500/90 text-white w-6 h-6 rounded-lg text-[10px] flex items-center justify-center backdrop-blur-md shadow-lg"><i class="fa-solid fa-trash-can"></i></button>`;
+            <button onclick="removeImg(${i})" class="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded flex items-center justify-center text-[10px]"><i class="fa-solid fa-trash"></i></button>`;
         dom.imgPreview.appendChild(div);
     });
     dom.imgCount.textContent = `${formImages.length} / 3`;
@@ -616,64 +575,47 @@ function removeImg(i) { formImages.splice(i, 1); renderPreview(); }
 
 async function savePost() {
     const validations = [dom.title, dom.price, dom.province, dom.phone];
-    let isValid = true;
+    let ok = true;
     validations.forEach(el => {
-        if (!el.value.trim()) { el.classList.add('field-error'); isValid = false; }
-        else { el.classList.remove('field-error'); }
+        if (!el.value.trim()) { el.classList.add('field-error'); ok = false; }
+        else el.classList.remove('field-error');
     });
-
-    if (!isValid) return;
+    if (!ok) return;
 
     const btn = document.getElementById('btnSave');
     btn.disabled = true;
-    dom.btnSaveText.textContent = "กำลังลงทะเบียน...";
+    dom.btnSaveText.textContent = "Processing Registration...";
     
     const payload = {
-        action: 'add',
-        id: Date.now(),
-        title: dom.title.value,
-        price: Number(dom.price.value),
-        province: dom.province.value,
-        address: dom.address.value,
-        contact_name: dom.contactName.value,
-        phone: dom.phone.value,
-        body: dom.body.value,
-        images: formImages
+        action: 'add', id: Date.now(), title: dom.title.value, price: Number(dom.price.value),
+        province: dom.province.value, address: dom.address.value, contact_name: dom.contactName.value,
+        phone: dom.phone.value, body: dom.body.value, images: formImages
     };
     
     try {
         await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
         closeModal();
-        Swal.fire({ title: 'สำเร็จ', text: 'ข้อมูลของคุณถูกส่งเข้าระบบแล้ว', icon: 'success', background: '#1e293b', color: '#f1f5f9' });
+        Swal.fire({ title: 'Registration Successful', text: 'Tutor data has been submitted to the directory.', icon: 'success', background: '#0f172a', color: '#f8fafc' });
         setTimeout(() => loadPosts(), 1500);
-    } catch (e) { Swal.fire('Error', 'เกิดข้อผิดพลาดในการบันทึก', 'error'); } 
-    finally { btn.disabled = false; dom.btnSaveText.textContent = "ลงทะเบียนเดี๋ยวนี้"; }
+    } catch (e) { Swal.fire('Error', 'Submission failed.', 'error'); } 
+    finally { btn.disabled = false; dom.btnSaveText.textContent = "Confirm Registration"; }
 }
 
 function openSlider(i) {
     sliderIndex = i;
-    const currentImg = sliderImages[i];
-    dom.sliderImg.src = currentImg;
-    dom.sliderCount.textContent = `${i + 1} / ${sliderImages.length}`;
-    
-    // ปิด Dialog แรกเมื่อเปิด Slider
-    if (dom.viewDlg.open) {
-        dom.viewDlg.close();
-    }
-    
+    dom.sliderImg.src = sliderImages[i];
+    dom.sliderCount.textContent = `Image ${i + 1} / ${sliderImages.length}`;
+    if (dom.viewDlg.open) dom.viewDlg.close();
     dom.slider.classList.replace('slider-hidden', 'slider-visible');
     setScrollLock(true);
 }
 
-function closeImageSlider() { 
-    dom.slider.classList.replace('slider-visible', 'slider-hidden'); 
-    setScrollLock(false); 
-}
+function closeImageSlider() { dom.slider.classList.replace('slider-visible', 'slider-hidden'); setScrollLock(false); }
 
 function changeSlide(n) {
     sliderIndex = (sliderIndex + n + sliderImages.length) % sliderImages.length;
     dom.sliderImg.src = sliderImages[sliderIndex];
-    dom.sliderCount.textContent = `${sliderIndex + 1} / ${sliderImages.length}`;
+    dom.sliderCount.textContent = `Image ${sliderIndex + 1} / ${sliderImages.length}`;
 }
 
 function debounce(fn, t) {
@@ -682,15 +624,14 @@ function debounce(fn, t) {
 }
 
 function resetForm() {
-    dom.title.value = ''; dom.price.value = ''; dom.province.value = '';
-    dom.contactName.value = ''; dom.phone.value = ''; dom.address.value = ''; dom.body.value = '';
+    dom.title.value = dom.price.value = dom.province.value = dom.contactName.value = dom.phone.value = dom.address.value = dom.body.value = '';
     formImages = []; renderPreview();
     [dom.title, dom.price, dom.province, dom.phone].forEach(el => el.classList.remove('field-error'));
 }
 
 function refreshApp() {
-    dom.qDesktop.value = ''; dom.qMobile.value = '';
-    dom.filterDesktop.value = 'all'; dom.filterMobile.value = 'all';
+    dom.qDesktop.value = dom.qMobile.value = '';
+    dom.filterDesktop.value = dom.filterMobile.value = 'all';
     loadPosts();
 }
 
