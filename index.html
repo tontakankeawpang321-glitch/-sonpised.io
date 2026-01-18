@@ -32,7 +32,13 @@
         letter-spacing: -0.01em;
     }
 
-    body.no-scroll { overflow: hidden; }
+    /* ปรับปรุงการล็อคสกรอลล์ */
+    body.no-scroll { 
+        overflow: hidden !important; 
+        height: 100vh;
+        width: 100%;
+        position: fixed; /* ล็อคตำแหน่งในมือถือได้ดีกว่า */
+    }
     
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg-dark); }
@@ -47,9 +53,10 @@
         background-color: var(--bg-card);
         color: var(--text-main);
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        overscroll-behavior: contain; /* ป้องกันสกรอลล์ทะลุ */
     }
     dialog[open] { opacity: 1; transform: scale(1) translateY(0); }
-    dialog::backdrop { background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); }
     
     .transition-all-300 { transition: all 0.3s ease; }
     .slider-hidden { opacity: 0; pointer-events: none; transform: scale(1.05); }
@@ -95,6 +102,10 @@
     .btn-primary:hover {
         box-shadow: 0 6px 20px rgba(37, 99, 235, 0.23);
     }
+
+    /* Custom Scrollbar for inner content */
+    .inner-scroll::-webkit-scrollbar { width: 4px; }
+    .inner-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -201,34 +212,50 @@
 </footer>
 
 <!-- View Detail Dialog -->
-<dialog id="viewDlg" class="rounded-2xl w-[95%] max-w-3xl m-auto overflow-hidden">
-    <div class="grid grid-cols-1 md:grid-cols-2">
-        <div class="relative h-64 md:h-full bg-slate-950 border-r border-slate-800">
-            <div id="detailImageHero" class="w-full h-full cursor-pointer overflow-hidden">
-                <img id="viewHeroImg" src="" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" onerror="handleImgError(this)">
+<dialog id="viewDlg" class="w-full h-full max-w-none max-h-none m-0 p-0 bg-slate-900 shadow-2xl overflow-hidden rounded-none md:rounded-2xl md:w-[95%] md:max-w-3xl md:h-auto md:max-h-[90vh] md:m-auto">
+    <!-- Floating Close Button for Mobile -->
+    <button onclick="closeViewModal()" class="absolute top-4 right-4 z-50 bg-black/50 hover:bg-red-500 text-white rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-sm transition-colors shadow-lg">
+        <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+
+    <div class="h-full overflow-y-auto inner-scroll grid grid-cols-1 md:grid-cols-2">
+        <!-- Image Section -->
+        <div class="relative h-64 md:h-full bg-slate-950 border-r border-slate-800 shrink-0">
+            <div id="detailImageHero" class="w-full h-full cursor-pointer overflow-hidden group">
+                <img id="viewHeroImg" src="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="handleImgError(this)">
             </div>
-            <div class="absolute bottom-4 left-4 right-4 flex gap-2 overflow-x-auto pb-2 no-scrollbar" id="viewImages"></div>
+            <div class="absolute bottom-4 left-4 right-4 flex gap-2 overflow-x-auto pb-2 no-scrollbar z-10" id="viewImages"></div>
         </div>
         
-        <div class="p-8 flex flex-col bg-slate-900">
-            <div class="flex justify-between items-start mb-6">
+        <!-- Info Section -->
+        <div class="p-5 md:p-8 flex flex-col bg-slate-900 min-h-[50vh]">
+            <div class="flex justify-between items-start mb-6 pt-2 md:pt-0">
                 <div class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black rounded uppercase tracking-tighter border border-primary/20">โปรไฟล์ทางการ</div>
-                <div class="flex gap-2">
-                    <button id="btnDeletePost" class="text-slate-600 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center" title="ลบโพสต์"><i class="fa-solid fa-trash-can text-sm"></i></button>
-                    <button onclick="closeViewModal()" class="text-slate-600 hover:text-white transition-colors w-8 h-8 flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <div class="flex gap-2 pr-8 md:pr-0"> <!-- Added padding right for mobile to avoid overlap with floating close button -->
+                    <button id="btnDeletePost" class="text-slate-600 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800" title="ลบโพสต์">
+                        <i class="fa-solid fa-trash-can text-sm"></i>
+                    </button>
+                    <!-- Desktop Close Button (hidden on mobile, using floating one instead) -->
+                    <button onclick="closeViewModal()" class="hidden md:flex text-slate-600 hover:text-white transition-colors w-8 h-8 items-center justify-center rounded-full hover:bg-slate-800">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
                 </div>
             </div>
 
-            <h2 id="viewTitle" class="text-2xl font-bold text-white mb-2 leading-tight"></h2>
-            <div class="flex items-center gap-2 mb-8 text-slate-400 text-xs">
-                <i class="fa-solid fa-location-dot text-primary"></i>
-                <span id="viewProvince"></span>
-                <span class="mx-2 opacity-30">|</span>
-                <i class="fa-solid fa-graduation-cap"></i>
-                <span id="viewAddress"></span>
+            <h2 id="viewTitle" class="text-xl md:text-2xl font-bold text-white mb-2 leading-tight"></h2>
+            <div class="flex items-center flex-wrap gap-2 mb-6 text-slate-400 text-xs">
+                <div class="flex items-center gap-1">
+                    <i class="fa-solid fa-location-dot text-primary"></i>
+                    <span id="viewProvince"></span>
+                </div>
+                <span class="opacity-30">|</span>
+                <div class="flex items-center gap-1">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span id="viewAddress"></span>
+                </div>
             </div>
 
-            <div class="bg-slate-950/50 rounded-xl p-5 border border-slate-800 mb-8">
+            <div class="bg-slate-950/50 rounded-xl p-4 md:p-5 border border-slate-800 mb-6">
                 <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">อัตราค่าบริการ</p>
                 <div class="flex items-baseline gap-2">
                     <span id="viewPrice" class="text-3xl font-bold text-white"></span>
@@ -236,10 +263,10 @@
                 </div>
             </div>
 
-            <div class="space-y-4 mb-10 overflow-y-auto max-h-48 pr-2 no-scrollbar">
+            <div class="space-y-4 mb-8 flex-grow">
                 <div>
                     <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">คุณสมบัติและประสบการณ์</h4>
-                    <div id="viewBody" class="text-slate-300 text-xs leading-relaxed whitespace-pre-line"></div>
+                    <div id="viewBody" class="text-slate-300 text-xs leading-relaxed whitespace-pre-line break-words"></div>
                 </div>
             </div>
 
@@ -248,29 +275,30 @@
                     <span class="text-slate-500">ติวเตอร์: <span id="viewContact" class="text-slate-200 ml-1"></span></span>
                     <span id="viewPublishDate" class="text-slate-600 italic text-[10px]"></span>
                 </div>
-                <a id="btnCall" href="#" class="btn-primary w-full py-4 rounded-xl text-center font-bold text-white shadow-lg flex items-center justify-center gap-3 transition-all">
+                <!-- เปลี่ยนจาก <a> เป็น <button> เพื่อรองรับการคัดลอก -->
+                <button id="btnCall" class="btn-primary w-full py-4 rounded-xl text-center font-bold text-white shadow-lg flex items-center justify-center gap-3 transition-all active:scale-95">
                     <i class="fa-solid fa-phone-volume"></i> ติดต่อผู้สอน
-                </a>
+                </button>
             </div>
         </div>
     </div>
 </dialog>
 
 <!-- Registration Dialog -->
-<dialog id="dlg" class="rounded-2xl w-[95%] max-w-xl m-auto overflow-hidden bg-slate-900 border border-slate-800">
-    <div class="px-8 py-6 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
-        <h3 id="dlgTitle" class="text-lg font-bold text-white">แบบฟอร์มลงทะเบียนติวเตอร์</h3>
-        <button onclick="closeModal()" class="text-slate-500 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
+<dialog id="dlg" class="rounded-2xl w-[95%] max-w-xl m-auto overflow-hidden bg-slate-900 border border-slate-800 max-h-[90vh]">
+    <div class="px-6 md:px-8 py-4 md:py-6 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
+        <h3 id="dlgTitle" class="text-base md:text-lg font-bold text-white">แบบฟอร์มลงทะเบียน</h3>
+        <button onclick="closeModal()" class="text-slate-500 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800"><i class="fa-solid fa-xmark text-lg"></i></button>
     </div>
     
-    <div class="p-8 space-y-6 overflow-y-auto max-h-[70vh]">
-        <div class="grid grid-cols-1 gap-5">
+    <div class="p-6 md:p-8 space-y-5 overflow-y-auto max-h-[70vh] inner-scroll">
+        <div class="grid grid-cols-1 gap-4 md:gap-5">
             <div>
                 <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">วิชาที่เปิดรับสอน <span class="text-red-500">*</span></label>
                 <input id="title" type="text" class="w-full px-4 py-3 text-sm" placeholder="เช่น Advanced Calculus, IELTS 7.0+">
             </div>
             
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">พื้นที่ให้บริการ <span class="text-red-500">*</span></label>
                     <select id="input_province" class="w-full px-4 py-3 text-sm appearance-none">
@@ -283,7 +311,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">ชื่อผู้สอน</label>
                     <input id="contact_name" type="text" class="w-full px-4 py-3 text-sm" placeholder="ชื่อเล่นหรือชื่อจริง">
@@ -310,17 +338,17 @@
                 <div id="previewList" class="contents"></div>
                 <label id="uploadBtn" class="aspect-square border-2 border-dashed border-slate-800 rounded-xl cursor-pointer bg-slate-950/50 hover:bg-slate-950 hover:border-primary flex flex-col items-center justify-center text-slate-600 transition-all group">
                     <i class="fa-solid fa-camera text-xl mb-1 group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[8px] font-bold uppercase tracking-widest">เพิ่มรูปภาพ</span>
+                    <span class="text-[8px] font-bold uppercase tracking-widest">เพิ่มรูป</span>
                     <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
                 </label>
             </div>
         </div>
     </div>
     
-    <div class="p-8 border-t border-slate-800 flex gap-4 bg-slate-950/30">
+    <div class="p-6 md:p-8 border-t border-slate-800 flex gap-4 bg-slate-950/30">
         <button onclick="closeModal()" class="flex-1 px-4 py-3 text-slate-500 font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">ยกเลิก</button>
         <button onclick="savePost()" id="btnSave" class="btn-primary flex-[2] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg btn-animate transition-all">
-            <span id="btnSaveText">ยืนยันการลงทะเบียน</span> 
+            <span id="btnSaveText">ลงทะเบียน</span> 
         </button>
     </div>
 </dialog>
@@ -386,7 +414,20 @@ const dom = {
 };
 
 function handleImgError(img) { img.src = 'https://placehold.co/800x600/0f172a/334155?text=No+Image'; }
-function setScrollLock(lock) { document.body.classList.toggle('no-scroll', lock); }
+
+// ฟังก์ชันล็อคสกรอลล์
+let scrollPosition = 0;
+function setScrollLock(lock) { 
+    if (lock) {
+        scrollPosition = window.pageYOffset;
+        document.body.style.top = `-${scrollPosition}px`;
+        document.body.classList.add('no-scroll');
+    } else {
+        document.body.classList.remove('no-scroll');
+        document.body.style.top = '';
+        window.scrollTo(0, scrollPosition);
+    }
+}
 
 function init() {
     populateProvinces();
@@ -502,12 +543,20 @@ function viewDetail(id) {
     document.getElementById('viewTitle').textContent = p.title;
     document.getElementById('viewPrice').textContent = `฿${Number(p.price).toLocaleString()}`;
     document.getElementById('viewContact').textContent = p.contact_name || '-';
-    // document.getElementById('viewPhoneText').textContent = p.phone || 'N/A';
     document.getElementById('viewProvince').textContent = p.province;
     document.getElementById('viewAddress').textContent = p.address || 'สถานที่ตามตกลง';
     document.getElementById('viewBody').textContent = p.body || 'ไม่มีรายละเอียดเพิ่มเติม';
     document.getElementById('viewPublishDate').textContent = `เผยแพร่เมื่อ: ${new Date(p.id).toLocaleDateString('th-TH')}`;
-    document.getElementById('btnCall').href = p.phone ? `tel:${p.phone}` : "#";
+    
+    // ตั้งค่าปุ่มติดต่อ (คัดลอกเบอร์)
+    const btnCall = document.getElementById('btnCall');
+    if (p.phone) {
+        btnCall.innerHTML = `<i class="fa-regular fa-copy text-lg"></i> <span class="text-lg">${p.phone}</span> <span class="text-[10px] font-normal opacity-70">(แตะเพื่อคัดลอก)</span>`;
+        btnCall.onclick = () => copyToClipboard(p.phone);
+    } else {
+        btnCall.innerHTML = `<i class="fa-solid fa-phone-slash"></i> ไม่ระบุเบอร์โทร`;
+        btnCall.onclick = null;
+    }
     
     const imgBox = document.getElementById('viewImages');
     imgBox.innerHTML = '';
@@ -525,10 +574,47 @@ function viewDetail(id) {
     setScrollLock(true);
 }
 
+// ฟังก์ชันคัดลอกลง Clipboard
+function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(showCopySuccess);
+    } else {
+        // Fallback for older browsers
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showCopySuccess();
+        } catch (err) {
+            Swal.fire({ icon: 'error', title: 'คัดลอกไม่สำเร็จ', toast: true, position: 'top', showConfirmButton: false, timer: 2000 });
+        }
+        document.body.removeChild(textArea);
+    }
+}
+
+function showCopySuccess() {
+    Swal.fire({
+        icon: 'success',
+        title: 'คัดลอกเบอร์โทรแล้ว',
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 2000,
+        background: '#0f172a',
+        color: '#f8fafc'
+    });
+}
+
 function closeViewModal() { dom.viewDlg.close(); setScrollLock(false); }
 
 async function confirmDelete(id) {
-    closeViewModal(); 
+    // ปิด dialog แต่ยังไม่ปลดล็อค scroll เพราะ Swal จะเปิดต่อ
+    dom.viewDlg.close(); 
     const res = await Swal.fire({
         title: 'ยืนยันการลบโปรไฟล์?',
         text: 'การกระทำนี้จะลบข้อมูลติวเตอร์ออกจากระบบอย่างถาวร',
@@ -544,14 +630,18 @@ async function confirmDelete(id) {
     if (res.isConfirmed) {
         Swal.fire({ title: 'กำลังดำเนินการ...', allowOutsideClick: false, background: '#0f172a', color: '#f8fafc', didOpen: () => Swal.showLoading() });
         try {
-            // ส่งคำสั่ง action: 'delete' และ id ไปที่ Backend
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
-            // หน่วงเวลาเล็กน้อยเพื่อให้ backend ทำงานเสร็จ
             setTimeout(() => { 
                 loadPosts(); 
                 Swal.fire({ icon: 'success', title: 'ลบข้อมูลสำเร็จ', background: '#0f172a', color: '#f8fafc', showConfirmButton: false, timer: 1500 }); 
+                setScrollLock(false); // ปลดล็อคเมื่อเสร็จสิ้นทั้งหมด
             }, 1500);
-        } catch (e) { Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถลบข้อมูลได้', 'error'); }
+        } catch (e) { 
+            Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถลบข้อมูลได้', 'error'); 
+            setScrollLock(false);
+        }
+    } else {
+        setScrollLock(false); // ปลดล็อคถ้ายกเลิก
     }
 }
 
@@ -604,7 +694,7 @@ async function savePost() {
         Swal.fire({ title: 'ลงทะเบียนสำเร็จ', text: 'ข้อมูลของคุณถูกบันทึกเข้าสู่ระบบเรียบร้อยแล้ว', icon: 'success', background: '#0f172a', color: '#f8fafc' });
         setTimeout(() => loadPosts(), 1500);
     } catch (e) { Swal.fire('เกิดข้อผิดพลาด', 'บันทึกข้อมูลไม่สำเร็จ', 'error'); } 
-    finally { btn.disabled = false; dom.btnSaveText.textContent = "ยืนยันการลงทะเบียน"; }
+    finally { btn.disabled = false; dom.btnSaveText.textContent = "ลงทะเบียน"; }
 }
 
 function openSlider(i) {
@@ -613,10 +703,18 @@ function openSlider(i) {
     dom.sliderCount.textContent = `รูปที่ ${i + 1} / ${sliderImages.length}`;
     if (dom.viewDlg.open) dom.viewDlg.close();
     dom.slider.classList.replace('slider-hidden', 'slider-visible');
-    setScrollLock(true);
+    // setScrollLock(true); // ล็อคอยู่แล้วจาก viewDetail ไม่ต้องเรียกซ้ำเพื่อป้องกัน bug
 }
 
-function closeImageSlider() { dom.slider.classList.replace('slider-visible', 'slider-hidden'); setScrollLock(false); }
+function closeImageSlider() { 
+    dom.slider.classList.replace('slider-visible', 'slider-hidden'); 
+    // ถ้าปิด Slider แล้วกลับไปหน้าหลักให้ปลดล็อค แต่ถ้ากลับไป ViewDetail ให้ล็อคต่อ
+    // ในที่นี้เราปิด Slider คือกลับไปหน้า ViewDetail หรือหน้าหลัก?
+    // ปกติ Slider เปิดทับ ViewDetail เราต้องเปิด ViewDetail คืน หรือถ้า ViewDetail ปิดไปแล้วก็จบ
+    // โค้ดเดิมปิด ViewDetail เมื่อเปิด Slider
+    dom.viewDlg.showModal(); // เปิด ViewDetail กลับคืนมา
+    // setScrollLock(true); // ยังคงล็อคอยู่
+}
 
 function changeSlide(n) {
     sliderIndex = (sliderIndex + n + sliderImages.length) % sliderImages.length;
