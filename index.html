@@ -108,7 +108,7 @@
         </div>
         <div class="hidden xs:block">
             <span class="font-bold text-lg sm:text-xl text-white tracking-tight block leading-none">Tutor<span class="text-primary">Connect</span></span>
-            <span class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.15em]">Professional Network</span>
+            <span class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.15em]">เครือข่ายติวเตอร์มืออาชีพ</span>
         </div>
       </div>
       
@@ -165,7 +165,7 @@
     
     <div id="loading" class="flex flex-col items-center justify-center py-24">
         <div class="w-10 h-10 border-2 border-slate-800 border-t-primary rounded-full animate-spin mb-4"></div>
-        <p class="text-slate-500 text-xs font-bold tracking-widest uppercase">Synchronizing Database</p>
+        <p class="text-slate-500 text-xs font-bold tracking-widest uppercase">กำลังเชื่อมต่อฐานข้อมูล</p>
     </div>
     
     <!-- Grid -->
@@ -175,7 +175,7 @@
     <div id="pagination" class="flex justify-center items-center gap-6 pb-20">
         <button onclick="changePage(-1)" id="btnPrev" class="text-slate-400 hover:text-primary disabled:opacity-20 transition-all active:scale-90"><i class="fa-solid fa-arrow-left-long text-xl"></i></button>
         <div class="text-xs font-bold text-slate-500 tracking-widest uppercase">
-            Page <span id="pageIndicator" class="text-white mx-2 font-mono">1 / 1</span>
+            หน้า <span id="pageIndicator" class="text-white mx-2 font-mono">1 / 1</span>
         </div>
         <button onclick="changePage(1)" id="btnNext" class="text-slate-400 hover:text-primary disabled:opacity-20 transition-all active:scale-90"><i class="fa-solid fa-arrow-right-long text-xl"></i></button>
     </div>
@@ -185,16 +185,16 @@
     <div class="max-w-7xl mx-auto flex flex-col items-center">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-4xl text-center md:text-left mb-12">
             <div>
-                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-4">About Platform</h4>
+                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-4">เกี่ยวกับแพลตฟอร์ม</h4>
                 <p class="text-[11px] leading-relaxed">Tutor Connect เป็นแพลตฟอร์มกลางในการเชื่อมโยงระหว่างผู้สอนและผู้เรียน เพื่อยกระดับมาตรฐานการศึกษานอกระบบในประเทศไทย</p>
             </div>
             <div class="flex flex-col items-center">
                 <i class="fa-solid fa-shield-halved text-3xl mb-4 text-slate-800"></i>
-                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest">Verified Tutors</h4>
+                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest">ติวเตอร์ที่ผ่านการตรวจสอบ</h4>
             </div>
             <div class="text-center md:text-right">
-                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-4">Legal</h4>
-                <p class="text-[11px]">© 2024 Tutor Connect Solution. <br> All rights reserved.</p>
+                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-4">ข้อมูลทางกฎหมาย</h4>
+                <p class="text-[11px]">© 2024 Tutor Connect Solution. <br> สงวนลิขสิทธิ์</p>
             </div>
         </div>
     </div>
@@ -212,9 +212,9 @@
         
         <div class="p-8 flex flex-col bg-slate-900">
             <div class="flex justify-between items-start mb-6">
-                <div class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black rounded uppercase tracking-tighter border border-primary/20">Official Profile</div>
+                <div class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black rounded uppercase tracking-tighter border border-primary/20">โปรไฟล์ทางการ</div>
                 <div class="flex gap-2">
-                    <button id="btnDeletePost" class="text-slate-600 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                    <button id="btnDeletePost" class="text-slate-600 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center" title="ลบโพสต์"><i class="fa-solid fa-trash-can text-sm"></i></button>
                     <button onclick="closeViewModal()" class="text-slate-600 hover:text-white transition-colors w-8 h-8 flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
             </div>
@@ -229,16 +229,16 @@
             </div>
 
             <div class="bg-slate-950/50 rounded-xl p-5 border border-slate-800 mb-8">
-                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">Service Rate</p>
+                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">อัตราค่าบริการ</p>
                 <div class="flex items-baseline gap-2">
                     <span id="viewPrice" class="text-3xl font-bold text-white"></span>
-                    <span class="text-slate-500 text-xs font-medium">THB / Hour</span>
+                    <span class="text-slate-500 text-xs font-medium">บาท / ชั่วโมง</span>
                 </div>
             </div>
 
             <div class="space-y-4 mb-10 overflow-y-auto max-h-48 pr-2 no-scrollbar">
                 <div>
-                    <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Qualifications & Experience</h4>
+                    <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">คุณสมบัติและประสบการณ์</h4>
                     <div id="viewBody" class="text-slate-300 text-xs leading-relaxed whitespace-pre-line"></div>
                 </div>
             </div>
@@ -310,7 +310,7 @@
                 <div id="previewList" class="contents"></div>
                 <label id="uploadBtn" class="aspect-square border-2 border-dashed border-slate-800 rounded-xl cursor-pointer bg-slate-950/50 hover:bg-slate-950 hover:border-primary flex flex-col items-center justify-center text-slate-600 transition-all group">
                     <i class="fa-solid fa-camera text-xl mb-1 group-hover:scale-110 transition-transform"></i>
-                    <span class="text-[8px] font-bold uppercase tracking-widest">Add Image</span>
+                    <span class="text-[8px] font-bold uppercase tracking-widest">เพิ่มรูปภาพ</span>
                     <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
                 </label>
             </div>
@@ -318,9 +318,9 @@
     </div>
     
     <div class="p-8 border-t border-slate-800 flex gap-4 bg-slate-950/30">
-        <button onclick="closeModal()" class="flex-1 px-4 py-3 text-slate-500 font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">Cancel</button>
+        <button onclick="closeModal()" class="flex-1 px-4 py-3 text-slate-500 font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">ยกเลิก</button>
         <button onclick="savePost()" id="btnSave" class="btn-primary flex-[2] text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg btn-animate transition-all">
-            <span id="btnSaveText">Confirm Registration</span> 
+            <span id="btnSaveText">ยืนยันการลงทะเบียน</span> 
         </button>
     </div>
 </dialog>
@@ -336,12 +336,12 @@
         <button onclick="changeSlide(1)" class="absolute right-8 text-white w-12 h-12 hidden md:flex items-center justify-center hover:bg-white/5 rounded-full z-[110] transition-all"><i class="fa-solid fa-chevron-right text-2xl"></i></button>
     </div>
     <div class="absolute bottom-12 flex flex-col items-center gap-4 z-[110]">
-        <span id="sliderCounter" class="text-white text-[10px] bg-white/10 px-6 py-2 rounded-full font-mono border border-white/5 tracking-widest uppercase">Image 1 / 1</span>
+        <span id="sliderCounter" class="text-white text-[10px] bg-white/10 px-6 py-2 rounded-full font-mono border border-white/5 tracking-widest uppercase">รูปที่ 1 / 1</span>
     </div>
 </div>
 
 <script>
-/* SYSTEM INTEGRATION */
+/* SYSTEM INTEGRATION - กรุณาใส่ URL ของ Apps Script ที่ Deploy ใหม่ลงที่นี่ */
 const API_URL = "https://script.google.com/macros/s/AKfycbz2YS70cqQL6ELVYBeIWF2FOerHqC4MiUghgptsVZshL_hRJwPabC6Pxfa1_PKXOChzGw/exec"; 
 
 const PROVINCES = ["กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง", "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์", "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี"].sort();
@@ -385,7 +385,7 @@ const dom = {
     countTutors: document.getElementById('countTutors')
 };
 
-function handleImgError(img) { img.src = 'https://placehold.co/800x600/0f172a/334155?text=Professional+Profile'; }
+function handleImgError(img) { img.src = 'https://placehold.co/800x600/0f172a/334155?text=No+Image'; }
 function setScrollLock(lock) { document.body.classList.toggle('no-scroll', lock); }
 
 function init() {
@@ -452,16 +452,16 @@ function renderBoard() {
     const items = filteredPosts.slice(start, start + ITEMS_PER_PAGE);
     
     if (items.length === 0) {
-        dom.board.innerHTML = `<div class="col-span-full py-20 text-center text-slate-700 italic text-sm tracking-widest">No professional records found.</div>`;
+        dom.board.innerHTML = `<div class="col-span-full py-20 text-center text-slate-700 italic text-sm tracking-widest">ไม่พบข้อมูลติวเตอร์ที่ค้นหา</div>`;
     } else {
         items.forEach(p => {
-            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x500/0f172a/334155?text=Profile';
+            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x500/0f172a/334155?text=No+Image';
             const card = document.createElement('div');
             card.className = "tutor-card rounded-xl overflow-hidden shadow-sm flex flex-col cursor-pointer transition-all duration-300 group";
             card.onclick = () => viewDetail(p.id);
             card.innerHTML = `
                 <div class="aspect-[4/5] bg-slate-900 overflow-hidden relative">
-                    <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/400x500/0f172a/334155?text=Profile'">
+                    <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/400x500/0f172a/334155?text=No+Image'">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
                     <div class="absolute bottom-3 left-3">
                         <span class="bg-primary px-2 py-0.5 rounded text-[8px] font-bold text-white uppercase tracking-wider">${p.province}</span>
@@ -472,7 +472,7 @@ function renderBoard() {
                     <div class="mt-auto pt-3 border-t border-slate-800 flex items-center justify-between">
                         <div class="flex items-baseline gap-1">
                             <span class="text-white font-black text-sm sm:text-base">฿${Number(p.price).toLocaleString()}</span>
-                            <span class="text-[8px] text-slate-600 font-bold uppercase tracking-tighter">/ hr</span>
+                            <span class="text-[8px] text-slate-600 font-bold uppercase tracking-tighter">/ ชั่วโมง</span>
                         </div>
                         <i class="fa-solid fa-arrow-right-long text-[10px] text-slate-700 group-hover:translate-x-1 transition-transform"></i>
                     </div>
@@ -498,15 +498,15 @@ function closeModal() { dom.dlg.close(); setScrollLock(false); }
 function viewDetail(id) {
     const p = posts.find(x => x.id === id);
     if (!p) return;
-    dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/800x600/0f172a/334155?text=Profile';
+    dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/800x600/0f172a/334155?text=No+Image';
     document.getElementById('viewTitle').textContent = p.title;
     document.getElementById('viewPrice').textContent = `฿${Number(p.price).toLocaleString()}`;
     document.getElementById('viewContact').textContent = p.contact_name || '-';
-    document.getElementById('viewPhoneText').textContent = p.phone || 'N/A';
+    // document.getElementById('viewPhoneText').textContent = p.phone || 'N/A';
     document.getElementById('viewProvince').textContent = p.province;
-    document.getElementById('viewAddress').textContent = p.address || 'Flexible Location';
-    document.getElementById('viewBody').textContent = p.body || 'No additional details provided.';
-    dom.viewDate.textContent = `Published: ${new Date(p.id).toLocaleDateString('th-TH')}`;
+    document.getElementById('viewAddress').textContent = p.address || 'สถานที่ตามตกลง';
+    document.getElementById('viewBody').textContent = p.body || 'ไม่มีรายละเอียดเพิ่มเติม';
+    document.getElementById('viewPublishDate').textContent = `เผยแพร่เมื่อ: ${new Date(p.id).toLocaleDateString('th-TH')}`;
     document.getElementById('btnCall').href = p.phone ? `tel:${p.phone}` : "#";
     
     const imgBox = document.getElementById('viewImages');
@@ -530,22 +530,28 @@ function closeViewModal() { dom.viewDlg.close(); setScrollLock(false); }
 async function confirmDelete(id) {
     closeViewModal(); 
     const res = await Swal.fire({
-        title: 'Archive Profile?',
-        text: 'This action will permanently remove the tutor record from the active directory.',
+        title: 'ยืนยันการลบโปรไฟล์?',
+        text: 'การกระทำนี้จะลบข้อมูลติวเตอร์ออกจากระบบอย่างถาวร',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#334155',
-        confirmButtonText: 'Archive',
+        confirmButtonText: 'ยืนยันการลบ',
+        cancelButtonText: 'ยกเลิก',
         background: '#0f172a',
         color: '#f8fafc'
     });
     if (res.isConfirmed) {
-        Swal.fire({ title: 'Processing...', allowOutsideClick: false, background: '#0f172a', color: '#f8fafc', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'กำลังดำเนินการ...', allowOutsideClick: false, background: '#0f172a', color: '#f8fafc', didOpen: () => Swal.showLoading() });
         try {
+            // ส่งคำสั่ง action: 'delete' และ id ไปที่ Backend
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
-            setTimeout(() => { loadPosts(); Swal.fire({ icon: 'success', title: 'Archived', background: '#0f172a', color: '#f8fafc', showConfirmButton: false, timer: 1500 }); }, 1000);
-        } catch (e) { Swal.fire('Error', 'Archive process failed.', 'error'); }
+            // หน่วงเวลาเล็กน้อยเพื่อให้ backend ทำงานเสร็จ
+            setTimeout(() => { 
+                loadPosts(); 
+                Swal.fire({ icon: 'success', title: 'ลบข้อมูลสำเร็จ', background: '#0f172a', color: '#f8fafc', showConfirmButton: false, timer: 1500 }); 
+            }, 1500);
+        } catch (e) { Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถลบข้อมูลได้', 'error'); }
     }
 }
 
@@ -584,7 +590,7 @@ async function savePost() {
 
     const btn = document.getElementById('btnSave');
     btn.disabled = true;
-    dom.btnSaveText.textContent = "Processing Registration...";
+    dom.btnSaveText.textContent = "กำลังบันทึกข้อมูล...";
     
     const payload = {
         action: 'add', id: Date.now(), title: dom.title.value, price: Number(dom.price.value),
@@ -595,16 +601,16 @@ async function savePost() {
     try {
         await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
         closeModal();
-        Swal.fire({ title: 'Registration Successful', text: 'Tutor data has been submitted to the directory.', icon: 'success', background: '#0f172a', color: '#f8fafc' });
+        Swal.fire({ title: 'ลงทะเบียนสำเร็จ', text: 'ข้อมูลของคุณถูกบันทึกเข้าสู่ระบบเรียบร้อยแล้ว', icon: 'success', background: '#0f172a', color: '#f8fafc' });
         setTimeout(() => loadPosts(), 1500);
-    } catch (e) { Swal.fire('Error', 'Submission failed.', 'error'); } 
-    finally { btn.disabled = false; dom.btnSaveText.textContent = "Confirm Registration"; }
+    } catch (e) { Swal.fire('เกิดข้อผิดพลาด', 'บันทึกข้อมูลไม่สำเร็จ', 'error'); } 
+    finally { btn.disabled = false; dom.btnSaveText.textContent = "ยืนยันการลงทะเบียน"; }
 }
 
 function openSlider(i) {
     sliderIndex = i;
     dom.sliderImg.src = sliderImages[i];
-    dom.sliderCount.textContent = `Image ${i + 1} / ${sliderImages.length}`;
+    dom.sliderCount.textContent = `รูปที่ ${i + 1} / ${sliderImages.length}`;
     if (dom.viewDlg.open) dom.viewDlg.close();
     dom.slider.classList.replace('slider-hidden', 'slider-visible');
     setScrollLock(true);
@@ -615,7 +621,7 @@ function closeImageSlider() { dom.slider.classList.replace('slider-visible', 'sl
 function changeSlide(n) {
     sliderIndex = (sliderIndex + n + sliderImages.length) % sliderImages.length;
     dom.sliderImg.src = sliderImages[sliderIndex];
-    dom.sliderCount.textContent = `Image ${sliderIndex + 1} / ${sliderImages.length}`;
+    dom.sliderCount.textContent = `รูปที่ ${sliderIndex + 1} / ${sliderImages.length}`;
 }
 
 function debounce(fn, t) {
