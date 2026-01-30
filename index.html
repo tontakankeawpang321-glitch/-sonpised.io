@@ -406,7 +406,6 @@ function populateProvinces() {
 }
 
 async function loadPosts() {
-    // โหลดจาก Cache ก่อนเพื่อความเร็ว
     const cached = localStorage.getItem(CACHE_KEY);
     if (cached) {
         posts = JSON.parse(cached);
@@ -422,7 +421,6 @@ async function loadPosts() {
         const rawPosts = (Array.isArray(data) ? data : data.data || []);
         
         posts = rawPosts.map(p => {
-            // ระบบ Mapping รูปภาพอัจฉริยะ (Smart Image Mapping)
             let imgs = [];
             try {
               if (Array.isArray(p.images)) imgs = p.images;
@@ -531,13 +529,13 @@ function viewDetail(id) {
     document.getElementById('viewPrice').textContent = Number(p.price).toLocaleString();
     document.getElementById('viewContact').textContent = p.contact_name || 'ติวเตอร์พาร์ทเนอร์';
     
-    // ระบบจัดการเบอร์โทรศัพท์ (Phone Sanitization)
     const rawPhone = String(p.phone || '');
     const cleanPhone = rawPhone.replace(/[^0-9]/g, ''); 
     const telLink = cleanPhone ? `tel:${cleanPhone}` : '#';
     const phoneEl = document.getElementById('viewPhoneShow');
     if (phoneEl) {
-        phoneEl.textContent = rawPhone || 'ไม่ได้ระบุเบอร์';
+        // แก้ไข: นำข้อความ "ไม่ได้ระบุเบอร์" ออก ให้เหลือแต่ค่าว่างหากไม่มีเบอร์
+        phoneEl.textContent = rawPhone || '';
         phoneEl.href = telLink;
     }
 
@@ -581,7 +579,6 @@ async function confirmDelete(id) {
     if (res.isConfirmed) {
         Swal.fire({ title: 'กำลังดำเนินการ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
         try {
-            // ระบบ No-Cors สำหรับ GAS Backend
             await fetch(API_URL, { 
                 method: 'POST', 
                 mode: 'no-cors',
