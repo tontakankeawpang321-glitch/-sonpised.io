@@ -117,6 +117,26 @@
         transform: translateY(-1px);
     }
     .btn-call-gradient:active { transform: translateY(0); }
+    
+    /* ปุ่มโทรแบบกลมเล็ก */
+    .btn-call-icon {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        color: white;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid white;
+    }
+    .btn-call-icon:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4);
+    }
+    .btn-call-icon:active { transform: scale(0.95); }
 
     /* ปุ่ม Add Mobile Style ใหม่ */
     .btn-add-mobile {
@@ -159,7 +179,7 @@
       <!-- Logo Section -->
       <div class="flex items-center gap-3 cursor-pointer group" onclick="refreshApp()">
         <div class="logo-gradient text-white w-10 h-10 rounded-xl shadow-lg transition-transform group-hover:scale-105 flex items-center justify-center">
-            <i class="fa-solid fa-user-graduate text-lg"></i> <!-- Updated Beautiful Icon -->
+            <i class="fa-solid fa-user-graduate text-lg"></i>
         </div>
         <div class="hidden xs:block">
             <span class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight block leading-none">Tutor<span class="text-blue-600">Connect</span></span>
@@ -316,13 +336,24 @@
                 </div>
             </div>
 
-            <div class="mt-auto pt-6 border-t border-slate-100 space-y-3">
-                <div class="flex justify-between items-center text-xs">
-                    <span class="text-slate-500">ผู้สอน: <span id="viewContact" class="text-slate-900 ml-1 font-bold"></span></span>
-                    <span id="viewPublishDate" class="text-slate-400 italic text-[10px]"></span>
+            <!-- New Footer Layout for Phone Button -->
+            <div class="mt-auto pt-6 border-t border-slate-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">ติดต่อผู้สอน</p>
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div>
+                                <div id="viewContact" class="text-slate-900 font-bold text-sm leading-tight"></div>
+                                <div id="viewPublishDate" class="text-slate-400 text-[10px]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ปุ่มโทรศัพท์จะถูกใส่ที่นี่ -->
+                    <div id="viewPhoneBtnContainer"></div>
                 </div>
-                <!-- ปุ่มโทรออกโดยตรง (จะถูกซ่อนถ้าไม่มีเบอร์) -->
-                <div id="callSection"></div>
             </div>
         </div>
     </div>
@@ -455,7 +486,7 @@ const dom = {
     viewHero: document.getElementById('viewHeroImg'),
     viewDate: document.getElementById('viewPublishDate'),
     countTutors: document.getElementById('countTutors'),
-    callSection: document.getElementById('callSection')
+    viewPhoneBtnContainer: document.getElementById('viewPhoneBtnContainer')
 };
 
 function handleImgError(img) { img.src = 'https://placehold.co/800x600/f1f5f9/94a3b8?text=No+Image'; }
@@ -545,17 +576,16 @@ function renderBoard() {
             card.className = "tutor-card rounded-xl overflow-hidden flex flex-col cursor-pointer transition-all duration-300 group bg-white";
             card.onclick = () => viewDetail(p.id);
             
-            // ตรวจสอบเบอร์โทร
+            // ตรวจสอบเบอร์โทรและสร้างปุ่มโทรสำหรับการ์ดด้านนอก
             const phoneStr = String(p.phone || "").trim();
             const hasPhone = phoneStr.length > 0;
-            // สร้างลิงก์เบอร์โทรที่สะอาด (ลบ - และวรรคออก)
             const cleanPhone = phoneStr.replace(/[^0-9+]/g, '');
             
             let phoneButtonHtml = '';
             if (hasPhone) {
                 phoneButtonHtml = `
-                    <div class="mb-3">
-                        <a href="tel:${cleanPhone}" onclick="event.stopPropagation()" class="btn-call-gradient inline-flex items-center justify-center w-full py-2.5 rounded-lg transition-all duration-300 text-xs font-bold gap-2">
+                    <div class="mb-3 relative z-20">
+                        <a href="tel:${cleanPhone}" onclick="event.stopPropagation()" class="btn-call-gradient inline-flex items-center justify-center w-full py-2.5 rounded-lg transition-all duration-300 text-xs font-bold gap-2 hover:scale-[1.02] active:scale-95">
                             <i class="fa-solid fa-phone"></i>
                             โทรติดต่อ ${phoneStr}
                         </a>
@@ -614,18 +644,17 @@ function viewDetail(id) {
     document.getElementById('viewBody').textContent = p.body || 'ไม่มีรายละเอียดเพิ่มเติม';
     document.getElementById('viewPublishDate').textContent = `เผยแพร่เมื่อ: ${new Date(p.id).toLocaleDateString('th-TH')}`;
     
-    // จัดการปุ่มโทรศัพท์ในหน้ารายละเอียด
+    // จัดการปุ่มโทรศัพท์แบบไอคอนเล็กๆ ในหน้ารายละเอียด
     const phoneStr = String(p.phone || "").trim();
     if (phoneStr.length > 0) {
         const cleanPhone = phoneStr.replace(/[^0-9+]/g, '');
-        dom.callSection.innerHTML = `
-            <a href="tel:${cleanPhone}" class="btn-call-gradient w-full py-3.5 rounded-lg text-center font-bold text-white shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95 no-underline">
-                <i class="fa-solid fa-phone-volume animate-pulse text-lg"></i> 
-                <span>โทรติดต่อ ${phoneStr}</span>
+        dom.viewPhoneBtnContainer.innerHTML = `
+            <a href="tel:${cleanPhone}" class="btn-call-icon" title="โทรหา ${phoneStr}">
+                <i class="fa-solid fa-phone text-lg animate-pulse"></i>
             </a>
         `;
     } else {
-        dom.callSection.innerHTML = ''; // ซ่อนปุ่มถ้าไม่มีเบอร์
+        dom.viewPhoneBtnContainer.innerHTML = '';
     }
     
     const imgBox = document.getElementById('viewImages');
