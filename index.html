@@ -1,461 +1,353 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Tutor Connect | แพลตฟอร์มค้นหาติวเตอร์มืออาชีพ</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>Tutor Connect | แพลตฟอร์มค้นหาติวเตอร์มืออาชีพ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<style>
-    :root {
-        /* ปรับโทนสีให้ดูจริงจังและพรีเมียมขึ้น (Serious & Premium) */
-        --primary: #0f172a; /* Slate 900 - Dark Professional */
-        --primary-light: #334155; /* Slate 700 */
-        --accent: #2563eb; /* Blue 600 - Action Color */
-        --bg-main: #f1f5f9; /* Slate 100 - Clean BG */
-        --bg-card: #ffffff;
-        --text-main: #1e293b;
-        --text-muted: #64748b;
-        --border-color: #e2e8f0;
-    }
+    <style>
+        :root {
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #ca8a04; 
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
 
-    body { 
-        font-family: 'Prompt', sans-serif; 
-        background-color: var(--bg-main); 
-        color: var(--text-main); 
-        -webkit-tap-highlight-color: transparent; 
-        overflow-x: hidden;
-        letter-spacing: -0.01em;
-    }
+        body { 
+            font-family: 'Prompt', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            -webkit-tap-highlight-color: transparent; 
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
 
-    /* Scroll Lock */
-    body.no-scroll { 
-        overflow: hidden !important; 
-        height: 100vh;
-        width: 100%;
-        position: fixed;
-    }
-    
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-main); }
-    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
-    
-    dialog {
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        opacity: 0;
-        transform: scale(0.98) translateY(5px);
-        border: none;
-        outline: none;
-        background-color: var(--bg-card);
-        color: var(--text-main);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        overscroll-behavior: contain;
-    }
-    dialog[open] { opacity: 1; transform: scale(1) translateY(0); }
-    dialog::backdrop { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); }
-    
-    .glass-nav { 
-        background: rgba(255, 255, 255, 0.98); 
-        backdrop-filter: blur(12px); 
-        border-bottom: 1px solid var(--border-color);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
+        body.no-scroll { overflow: hidden; }
+        
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        dialog {
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            opacity: 0;
+            transform: scale(0.98);
+            border: none;
+            outline: none;
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-radius: 0.75rem;
+            max-height: 90vh;
+            max-width: 95vw;
+            overscroll-behavior: contain;
+        }
+        dialog[open] { opacity: 1; transform: scale(1); }
+        dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); }
+        
+        .nav-solid { 
+            background: rgba(255, 255, 255, 0.98); 
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
 
-    /* Inputs - Clean & Serious */
-    input, select, textarea {
-        background-color: #ffffff !important;
-        color: var(--text-main) !important;
-        border: 1px solid #cbd5e1 !important;
-        transition: all 0.2s ease;
-        border-radius: 0.5rem !important;
-    }
-    input:focus, select:focus, textarea:focus {
-        border-color: var(--accent) !important;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        outline: none;
-    }
+        input, select, textarea {
+            background-color: #ffffff !important;
+            color: var(--text-main) !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 0.5rem !important;
+            box-shadow: none !important; 
+            -webkit-appearance: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary) !important;
+            outline: none;
+            ring: 1px solid var(--primary);
+        }
 
-    .tutor-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-    .tutor-card:hover {
-        border-color: var(--accent);
-        transform: translateY(-4px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
+        .field-error { border-color: #ef4444 !important; background-color: #fff1f2 !important; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .tutor-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+            position: relative;
+            overflow: hidden;
+            content-visibility: auto; 
+            contain-intrinsic-size: 300px;
+            transition: transform 0.2s;
+        }
+        .tutor-card:hover { transform: translateY(-3px); }
+        .tutor-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--primary);
+            z-index: 10;
+        }
 
-    .btn-primary {
-        background: var(--primary);
-        color: white;
-        transition: all 0.2s;
-    }
-    .btn-primary:hover {
-        background: var(--primary-light);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    /* ปุ่มโทรสีเขียวพรีเมียม */
-    .btn-call-gradient {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-        color: white;
-        font-weight: 600;
-        box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.2);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-    .btn-call-gradient:hover {
-        background: linear-gradient(135deg, #047857 0%, #059669 100%);
-        box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3);
-        transform: translateY(-1px);
-    }
-    .btn-call-gradient:active { transform: translateY(0); }
-    
-    /* ปุ่มโทรแบบกลมเล็ก */
-    .btn-call-icon {
-        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-        color: white;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 2px solid white;
-    }
-    .btn-call-icon:hover {
-        transform: scale(1.1) rotate(5deg);
-        box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4);
-    }
-    .btn-call-icon:active { transform: scale(0.95); }
-
-    /* ปุ่ม Add Mobile Style ใหม่ */
-    .btn-add-mobile {
-        background: var(--accent);
-        color: white;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border-radius: 9999px; /* Circle */
-    }
-    .btn-add-mobile:active { transform: scale(0.92); }
-
-    /* New Logo Gradient */
-    .logo-gradient {
-        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .inner-scroll::-webkit-scrollbar { width: 4px; }
-    .inner-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .slider-hidden { opacity: 0; pointer-events: none; transform: scale(1.05); }
-    .slider-visible { opacity: 1; pointer-events: auto; transform: scale(1); }
-    
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        75% { transform: translateX(5px); }
-    }
-    .field-error { 
-        border-color: #ef4444 !important; 
-        background-color: #fef2f2 !important; 
-        animation: shake 0.4s ease-in-out;
-    }
-</style>
+        .icon-3d {
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.2), 2px 2px 2px rgba(0,0,0,0.1);
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-900">
+<body class="min-h-screen flex flex-col">
 
 <!-- Navigation -->
-<nav class="glass-nav sticky top-0 z-50">
+<nav class="nav-solid sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-      <!-- Logo Section -->
-      <div class="flex items-center gap-3 cursor-pointer group" onclick="refreshApp()">
-        <div class="logo-gradient text-white w-10 h-10 rounded-xl shadow-lg transition-transform group-hover:scale-105 flex items-center justify-center">
-            <i class="fa-solid fa-user-graduate text-lg"></i>
+      <!-- Logo Area -->
+      <div class="flex items-center gap-3 cursor-pointer select-none" onclick="refreshApp()">
+        <div class="bg-slate-900 text-white w-10 h-10 rounded-lg flex items-center justify-center shadow-sm">
+            <i class="fa-solid fa-user-graduate text-xl text-yellow-400 icon-3d"></i>
         </div>
-        <div class="hidden xs:block">
-            <span class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight block leading-none">Tutor<span class="text-blue-600">Connect</span></span>
-            <span class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em]">Professional</span>
+        <div>
+            <span class="font-bold text-lg text-slate-900 tracking-tight block leading-none font-serif">TutorConnect</span>
+            <span class="text-[9px] text-yellow-600 font-bold uppercase tracking-widest">Professional</span>
         </div>
       </div>
       
-      <!-- Desktop Actions -->
-      <div class="hidden lg:flex items-center gap-4">
-         <div class="flex bg-slate-100 p-1 rounded-lg border border-slate-200 focus-within:ring-2 focus-within:ring-blue-100 transition-all">
-             <select id="filter_province_desktop" class="bg-transparent px-4 py-2 text-sm outline-none cursor-pointer border-r border-slate-300 text-slate-600 font-medium hover:text-slate-900">
-                <option value="all">ทุกจังหวัด</option>
+      <!-- Right Side Actions -->
+      <div class="flex items-center gap-3">
+         <!-- Desktop Filter -->
+         <div class="hidden lg:flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+             <select id="filter_province_desktop" class="bg-transparent px-2 py-1.5 text-sm outline-none cursor-pointer border-r border-slate-200 text-slate-700 font-medium hover:text-slate-900 transition-colors mr-2">
+                <option value="all">ทุกจังหวัด (All)</option>
              </select>
              <div class="relative">
-                 <input id="q_desktop" type="text" placeholder="ค้นหาวิชา..." class="bg-transparent pl-10 pr-4 py-2 text-sm w-64 outline-none text-slate-700 border-none focus:ring-0 shadow-none !bg-transparent !border-0">
-                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-2.5 text-slate-400"></i>
+                 <input id="q_desktop" type="text" placeholder="ค้นหาวิชาเรียน..." class="bg-transparent pl-8 pr-4 py-1.5 text-sm w-48 outline-none text-slate-800 border-none focus:ring-0 placeholder-slate-400 font-medium">
+                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-2 text-slate-400 text-xs"></i>
              </div>
          </div>
-         <button onclick="openNewPostModal()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-lg flex items-center gap-2 btn-animate font-medium transition-all text-sm shadow-md">
-            <i class="fa-solid fa-plus text-xs"></i> ลงทะเบียน
-         </button>
-      </div>
-      
-      <!-- Mobile Actions -->
-      <div class="lg:hidden flex items-center gap-2">
-         <button onclick="openNewPostModal()" class="btn-add-mobile w-10 h-10 flex items-center justify-center">
-            <i class="fa-solid fa-plus text-lg"></i>
+
+         <!-- Register Button -->
+         <button onclick="openNewPostModal()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-[0_3px_0_rgb(161,98,7)] active:shadow-none active:translate-y-[3px] transition-all flex items-center gap-2 border border-yellow-600">
+            <i class="fa-solid fa-plus text-xs drop-shadow-sm"></i> 
+            <span>ลงทะเบียน</span>
          </button>
       </div>
   </div>
 </nav>
 
 <!-- Mobile Filter Bar -->
-<div class="lg:hidden bg-white border-b border-slate-200 p-3 sticky top-16 z-40 shadow-sm">
-    <div class="flex gap-3 max-w-2xl mx-auto">
-        <div class="relative w-[40%]">
-             <select id="filter_province_mobile" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none text-slate-700 appearance-none font-medium shadow-sm focus:border-blue-500 transition-colors">
-                <option value="all">ทุกพื้นที่</option>
-            </select>
-            <i class="fa-solid fa-location-dot absolute left-3 top-3 text-slate-400 text-xs"></i>
-        </div>
-        <div class="relative w-[60%]">
-            <input id="q_mobile" type="text" placeholder="ค้นหาวิชา..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none text-slate-800 shadow-sm focus:border-blue-500 transition-colors">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+<div class="lg:hidden bg-white border-b border-slate-200 px-4 py-3 sticky top-16 z-40 shadow-sm">
+    <div class="flex gap-2 w-full">
+        <select id="filter_province_mobile" class="border border-slate-300 rounded-lg px-2 py-0 text-xs bg-slate-50 outline-none w-[35%] font-medium text-slate-700 h-10">
+            <option value="all">ทุกพื้นที่</option>
+        </select>
+        <div class="relative w-[65%]">
+            <input id="q_mobile" type="text" placeholder="ค้นหาวิชา, ติวเตอร์..." class="w-full pl-9 pr-3 py-0 bg-slate-50 border border-slate-300 rounded-lg text-xs outline-none text-slate-800 placeholder-slate-400 h-10 font-medium appearance-none">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400"></i>
         </div>
     </div>
 </div>
 
-<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-    <!-- Section Header -->
-    <div class="mb-10 pl-2">
-        <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 tracking-tight">ทำเนียบติวเตอร์</h1>
-        <p class="text-slate-500 text-sm sm:text-lg mt-2 font-light">แหล่งรวมติวเตอร์คุณภาพ เพื่อผลลัพธ์ที่ดีที่สุด</p>
-        <div class="flex items-center gap-4 mt-4">
-            <div class="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-slate-200 shadow-sm">
-                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                <span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider"><span id="countTutors">0</span> ติวเตอร์พร้อมสอน</span>
+<header class="bg-slate-900 text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-800 to-slate-950"></div>
+    <div class="max-w-7xl mx-auto px-4 py-8 relative z-10">
+        <div class="flex flex-col items-center text-center sm:items-start sm:text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full mb-4 border border-white/5">
+                <div id="statusDot" class="w-2 h-2 bg-gray-400 rounded-full"></div>
+                <span class="text-[10px] font-bold text-slate-200 uppercase tracking-widest"><span id="countTutors" class="text-white text-xs mr-1">0</span> ติวเตอร์ออนไลน์</span>
             </div>
+            <h1 class="text-3xl font-bold text-white tracking-tight leading-tight mb-2">
+                ทำเนียบ<span class="text-yellow-400 icon-3d">ติวเตอร์</span>มืออาชีพ
+            </h1>
+            <p class="text-slate-400 text-xs font-light max-w-md leading-relaxed">
+                เชื่อมโยงผู้เรียนกับติวเตอร์คุณภาพ พร้อมเทคนิคการเรียนที่เห็นผลจริง
+            </p>
         </div>
     </div>
-    
-    <div id="loading" class="flex flex-col items-center justify-center py-24">
-        <div class="w-10 h-10 border-2 border-slate-200 border-t-slate-800 rounded-full animate-spin mb-4"></div>
-        <p class="text-slate-400 text-xs font-bold tracking-widest uppercase">กำลังโหลดข้อมูล</p>
+</header>
+
+<main class="flex-grow max-w-7xl mx-auto px-4 py-6 w-full relative z-20">
+    <!-- Loader -->
+    <div id="loading" class="flex flex-col items-center justify-center py-12 bg-white rounded-xl border border-slate-100 shadow-sm hidden">
+        <div class="w-10 h-10 border-4 border-slate-200 border-t-yellow-500 rounded-full animate-spin mb-3"></div>
+        <p class="text-slate-400 text-[10px] font-bold tracking-widest uppercase">กำลังเชื่อมต่อข้อมูล...</p>
     </div>
     
     <!-- Grid -->
-    <section id="board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 sm:gap-6 pb-12"></section>
+    <section id="board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 pb-8"></section>
 
     <!-- Pagination -->
-    <div id="pagination" class="flex justify-center items-center gap-6 pb-20">
-        <button onclick="changePage(-1)" id="btnPrev" class="text-slate-400 hover:text-slate-900 disabled:opacity-30 transition-all active:scale-90"><i class="fa-solid fa-arrow-left-long text-xl"></i></button>
-        <div class="text-xs font-bold text-slate-500 tracking-widest uppercase">
-            หน้า <span id="pageIndicator" class="text-slate-800 mx-2 font-mono">1 / 1</span>
-        </div>
-        <button onclick="changePage(1)" id="btnNext" class="text-slate-400 hover:text-slate-900 disabled:opacity-30 transition-all active:scale-90"><i class="fa-solid fa-arrow-right-long text-xl"></i></button>
+    <div id="pagination" class="flex justify-center items-center gap-4 pb-12">
+        <button onclick="changePage(-1)" id="btnPrev" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 active:bg-slate-100 disabled:opacity-30 shadow-sm"><i class="fa-solid fa-chevron-left"></i></button>
+        <span id="pageIndicator" class="text-xs font-bold text-slate-500 font-mono">1 / 1</span>
+        <button onclick="changePage(1)" id="btnNext" class="w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-slate-200 text-slate-500 active:bg-slate-100 disabled:opacity-30 shadow-sm"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
 </main>
 
-<footer class="bg-white text-slate-600 py-16 px-6 border-t border-slate-200">
-    <div class="max-w-7xl mx-auto flex flex-col items-center">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-4xl text-center md:text-left mb-12">
-            <div>
-                <h4 class="text-slate-900 font-bold text-xs uppercase tracking-widest mb-4">เกี่ยวกับแพลตฟอร์ม</h4>
-                <p class="text-[11px] leading-relaxed text-slate-500">Tutor Connect แพลตฟอร์มกลางเชื่อมโยงผู้สอนและผู้เรียน เพื่อยกระดับมาตรฐานการศึกษาไทยให้เข้าถึงได้ง่าย</p>
-            </div>
-            <div class="flex flex-col items-center">
-                <i class="fa-solid fa-certificate text-3xl mb-4 text-slate-300"></i>
-                <h4 class="text-slate-900 font-bold text-xs uppercase tracking-widest">มาตรฐานมืออาชีพ</h4>
-            </div>
-            <div class="text-center md:text-right">
-                <h4 class="text-slate-900 font-bold text-xs uppercase tracking-widest mb-4">ข้อมูลทางกฎหมาย</h4>
-                <p class="text-[11px] text-slate-500">© 2024 Tutor Connect Solution. <br> สงวนลิขสิทธิ์</p>
-            </div>
-        </div>
-    </div>
+<footer class="bg-slate-950 text-slate-500 py-8 px-4 border-t border-slate-900 text-center">
+    <i class="fa-solid fa-certificate text-yellow-600 text-2xl mb-2 icon-3d"></i>
+    <p class="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Verified Professional Tutors</p>
+    <p class="text-[10px]">© 2024 Tutor Connect Solution.</p>
 </footer>
 
 <!-- View Detail Dialog -->
-<dialog id="viewDlg" class="w-full h-full max-w-none max-h-none m-0 p-0 bg-white shadow-2xl overflow-hidden rounded-none md:rounded-xl md:w-[95%] md:max-w-3xl md:h-auto md:max-h-[90vh] md:m-auto">
-    <!-- Floating Close Button for Mobile -->
-    <button onclick="closeViewModal()" class="absolute top-4 right-4 z-50 bg-white/90 hover:bg-slate-100 text-slate-500 hover:text-red-500 rounded-full w-10 h-10 flex items-center justify-center backdrop-blur-sm transition-colors shadow-lg border border-slate-100">
-        <i class="fa-solid fa-xmark text-lg"></i>
-    </button>
-
-    <div class="h-full overflow-y-auto inner-scroll grid grid-cols-1 md:grid-cols-2">
+<dialog id="viewDlg" class="w-full max-w-4xl p-0 rounded-xl overflow-hidden bg-white shadow-2xl">
+    <div class="flex flex-col md:grid md:grid-cols-12 h-[80vh] md:h-[600px]">
         <!-- Image Section -->
-        <div class="relative h-64 md:h-full bg-slate-50 border-r border-slate-200 shrink-0">
-            <div id="detailImageHero" class="w-full h-full cursor-pointer overflow-hidden group">
-                <img id="viewHeroImg" src="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="handleImgError(this)">
+        <div class="flex-none h-60 md:h-full md:col-span-7 bg-slate-900 relative">
+            <div id="detailImageHero" class="w-full h-full relative">
+                <img id="viewHeroImg" src="" class="w-full h-full object-cover" loading="lazy" onerror="handleImgError(this)">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-50"></div>
             </div>
-            <div class="absolute bottom-4 left-4 right-4 flex gap-2 overflow-x-auto pb-2 no-scrollbar z-10" id="viewImages"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-slate-900 to-transparent">
+                <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="viewImages"></div>
+            </div>
+            
+            <div class="absolute top-3 right-3 flex gap-2 md:hidden z-20">
+                <button id="btnDeletePostMobile" class="bg-black/30 text-white w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-red-600 transition-colors border border-white/10"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                <button onclick="closeViewModal()" class="bg-black/30 text-white w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/10"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
         </div>
         
         <!-- Info Section -->
-        <div class="p-5 md:p-8 flex flex-col bg-white min-h-[50vh]">
-            <div class="flex justify-between items-start mb-6 pt-2 md:pt-0">
-                <div class="px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-black rounded uppercase tracking-tighter border border-slate-200">Official Profile</div>
-                <div class="flex gap-2 pr-8 md:pr-0"> 
-                    <button id="btnDeletePost" class="text-slate-400 hover:text-red-500 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-50" title="ลบโพสต์">
-                        <i class="fa-solid fa-trash-can text-sm"></i>
-                    </button>
-                    <!-- Desktop Close Button -->
-                    <button onclick="closeViewModal()" class="hidden md:flex text-slate-400 hover:text-slate-800 transition-colors w-8 h-8 items-center justify-center rounded-full hover:bg-slate-100">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </div>
-            </div>
-
-            <h2 id="viewTitle" class="text-xl md:text-2xl font-bold text-slate-900 mb-2 leading-tight"></h2>
-            <div class="flex items-center flex-wrap gap-3 mb-6 text-slate-500 text-xs">
-                <div class="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded border border-slate-100">
-                    <i class="fa-solid fa-location-dot text-blue-500"></i>
-                    <span id="viewProvince" class="font-medium"></span>
-                </div>
-                <div class="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded border border-slate-100">
-                    <i class="fa-solid fa-user-graduate text-slate-400"></i>
-                    <span id="viewAddress"></span>
-                </div>
-            </div>
-
-            <div class="bg-slate-50 rounded-xl p-4 md:p-5 border border-slate-200 mb-6">
-                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">อัตราค่าบริการ</p>
-                <div class="flex items-baseline gap-2">
-                    <span id="viewPrice" class="text-3xl font-bold text-slate-900"></span>
-                    <span class="text-slate-500 text-xs font-medium">บาท / ชั่วโมง</span>
-                </div>
-            </div>
-
-            <div class="space-y-4 mb-8 flex-grow">
-                <div>
-                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">รายละเอียดและประวัติ</h4>
-                    <div id="viewBody" class="text-slate-600 text-sm leading-relaxed whitespace-pre-line break-words"></div>
-                </div>
-            </div>
-
-            <!-- New Footer Layout for Phone Button -->
-            <div class="mt-auto pt-6 border-t border-slate-100">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">ติดต่อผู้สอน</p>
-                        <div class="flex items-center gap-3">
-                            <div class="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                                <i class="fa-solid fa-user"></i>
-                            </div>
-                            <div>
-                                <div id="viewContact" class="text-slate-900 font-bold text-sm leading-tight"></div>
-                                <div id="viewPublishDate" class="text-slate-400 text-[10px]"></div>
-                            </div>
-                        </div>
+        <div class="flex-grow md:col-span-5 flex flex-col bg-white overflow-hidden">
+            <div class="p-5 overflow-y-auto flex-grow">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="px-2 py-1 bg-slate-100 text-slate-800 text-[10px] font-bold rounded border border-slate-200 uppercase tracking-wide">
+                        <i class="fa-solid fa-check-circle text-green-500 mr-1"></i> Verified
                     </div>
-                    <!-- ปุ่มโทรศัพท์จะถูกใส่ที่นี่ -->
-                    <div id="viewPhoneBtnContainer"></div>
+                    <div class="flex gap-2 hidden md:flex">
+                        <button id="btnDeletePost" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>
+                        <button onclick="closeViewModal()" class="text-slate-400 hover:text-slate-900"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    </div>
                 </div>
+
+                <h2 id="viewTitle" class="text-lg font-bold text-slate-900 mb-2 leading-tight"></h2>
+                
+                <div class="flex items-center gap-3 mb-4 text-xs text-slate-500 border-b border-slate-100 pb-3">
+                    <span id="viewProvince" class="flex items-center gap-1"><i class="fa-solid fa-location-dot text-blue-500"></i> <span class="truncate"></span></span>
+                    <span id="viewAddress" class="flex items-center gap-1 truncate"><i class="fa-solid fa-map-pin"></i> <span></span></span>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-3 border border-slate-100 mb-4">
+                    <p class="text-[9px] text-slate-400 uppercase font-bold tracking-wider mb-1">ค่าสอนรายชั่วโมง</p>
+                    <div class="flex items-baseline gap-1">
+                        <span id="viewPrice" class="text-2xl font-bold text-slate-900 font-mono"></span>
+                        <span class="text-xs text-slate-500">THB / ชม.</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="text-[10px] font-bold text-slate-900 uppercase mb-2">ประวัติและเทคนิคการสอน</h4>
+                    <div id="viewBody" class="text-xs text-slate-600 leading-relaxed whitespace-pre-line"></div>
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="p-4 border-t border-slate-100 bg-white flex-none sticky bottom-0">
+                <div class="flex justify-between items-center text-xs mb-3">
+                    <span class="text-slate-400">ติวเตอร์:</span>
+                    <div class="text-right">
+                        <div id="viewContact" class="font-bold text-slate-800 leading-tight"></div>
+                        <a id="viewPhoneShow" href="#" class="text-[10px] text-emerald-600 hover:text-emerald-700 font-mono font-bold tracking-wider"></a>
+                    </div>
+                </div>
+                <a id="btnCall" href="#" class="w-full bg-slate-900 text-white py-3 rounded-lg font-bold text-sm shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-phone text-yellow-400 icon-3d"></i> ติดต่อติวเตอร์
+                </a>
             </div>
         </div>
     </div>
 </dialog>
 
 <!-- Registration Dialog -->
-<dialog id="dlg" class="rounded-xl w-[95%] max-w-xl m-auto overflow-hidden bg-white border border-slate-200 max-h-[90vh] shadow-2xl">
-    <div class="px-6 md:px-8 py-4 md:py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-        <h3 id="dlgTitle" class="text-base md:text-lg font-bold text-slate-800">ลงทะเบียนติวเตอร์</h3>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-800 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200"><i class="fa-solid fa-xmark text-lg"></i></button>
-    </div>
-    
-    <div class="p-6 md:p-8 space-y-5 overflow-y-auto max-h-[70vh] inner-scroll">
-        <div class="grid grid-cols-1 gap-4 md:gap-5">
-            <div>
-                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">วิชาที่เปิดรับสอน <span class="text-red-500">*</span></label>
-                <input id="title" type="text" class="w-full px-4 py-3 text-sm" placeholder="เช่น คณิตศาสตร์ ม.ปลาย, ภาษาอังกฤษธุรกิจ">
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">พื้นที่ให้บริการ <span class="text-red-500">*</span></label>
-                    <select id="input_province" class="w-full px-4 py-3 text-sm appearance-none cursor-pointer">
-                        <option value="">เลือกจังหวัด</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">ค่าสอนรายชั่วโมง <span class="text-red-500">*</span></label>
-                    <input id="price" type="number" class="w-full px-4 py-3 text-sm" placeholder="ระบุตัวเลข (บาท)">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">ชื่อผู้สอน</label>
-                    <input id="contact_name" type="text" class="w-full px-4 py-3 text-sm" placeholder="ชื่อเล่นหรือชื่อจริง">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">เบอร์โทรติดต่อ <span class="text-red-500">*</span></label>
-                    <input id="phone" type="tel" class="w-full px-4 py-3 text-sm" placeholder="เช่น 081-xxx-xxxx">
+<dialog id="dlg" class="w-full max-w-lg p-0 rounded-xl overflow-hidden bg-white shadow-2xl h-[90vh] sm:h-auto">
+    <div class="flex flex-col h-full">
+        <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-white flex-none">
+            <h3 id="dlgTitle" class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-user-plus text-yellow-500 icon-3d"></i> ลงทะเบียนติวเตอร์
+            </h3>
+            <button onclick="closeModal()" class="text-slate-400 hover:text-slate-900 w-8 h-8 rounded-full active:bg-slate-50"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        
+        <div class="p-5 overflow-y-auto flex-grow bg-slate-50 space-y-5">
+            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm space-y-3">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ข้อมูลการสอน</h4>
+                <input id="title" type="text" class="w-full px-3 py-2 text-sm border-slate-200" placeholder="วิชาที่เปิดรับสอน *">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="relative">
+                        <select id="input_province" class="w-full px-3 py-2 text-sm border-slate-200 bg-white"><option value="">จังหวัด *</option></select>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-3 text-[9px] text-slate-300 pointer-events-none"></i>
+                    </div>
+                    <div class="relative">
+                        <input id="price" type="number" class="w-full pl-3 pr-8 py-2 text-sm border-slate-200" placeholder="ค่าสอน / ชม. *">
+                        <span class="absolute right-3 top-2 text-xs text-slate-400">฿</span>
+                    </div>
                 </div>
             </div>
 
-            <div>
-                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 tracking-widest">ประวัติและสถานที่สอน</label>
-                <input id="address" type="text" class="w-full px-4 py-3 text-sm mb-3" placeholder="สถาบันที่จบ หรือย่านที่สะดวกสอน">
-                <textarea id="body" rows="4" class="w-full px-4 py-3 text-sm resize-none" placeholder="บอกจุดเด่นของคุณ ประสบการณ์ หรือเทคนิคการสอน..."></textarea>
+            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm space-y-3">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ข้อมูลติดต่อ</h4>
+                <div class="grid grid-cols-2 gap-3">
+                    <input id="contact_name" type="text" class="w-full px-3 py-2 text-sm border-slate-200" placeholder="ชื่อติวเตอร์">
+                    <input id="phone" type="tel" class="w-full px-3 py-2 text-sm border-slate-200" placeholder="เบอร์โทร *">
+                </div>
+                <input id="address" type="text" class="w-full px-3 py-2 text-sm border-slate-200" placeholder="ย่านที่สะดวกสอน (เช่น สยาม, แนว BTS)">
+                <textarea id="body" rows="3" class="w-full px-3 py-2 text-sm border-slate-200 resize-none" placeholder="ประวัติการศึกษา หรือเทคนิคการสอน..."></textarea>
+            </div>
+        
+            <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">รูปภาพ (สูงสุด 3)</h4>
+                    <span id="imgCount" class="text-[9px] text-slate-400">0/3</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                    <div id="previewList" class="contents"></div>
+                    <label id="uploadBtn" class="aspect-square border border-dashed border-slate-300 rounded bg-slate-50 flex flex-col items-center justify-center text-slate-400 active:bg-slate-100 cursor-pointer">
+                        <i class="fa-solid fa-camera text-sm"></i>
+                        <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
+                    </label>
+                </div>
             </div>
         </div>
         
-        <div>
-            <div class="flex justify-between items-center mb-3">
-                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">ภาพโปรไฟล์ (สูงสุด 3 รูป)</label>
-                <span id="imgCount" class="text-[10px] font-mono text-slate-400">0 / 3</span>
-            </div>
-            <div class="grid grid-cols-3 gap-3">
-                <div id="previewList" class="contents"></div>
-                <label id="uploadBtn" class="aspect-square border-2 border-dashed border-slate-300 rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 hover:border-blue-500 flex flex-col items-center justify-center text-slate-400 transition-all group">
-                    <i class="fa-solid fa-camera text-xl mb-1 group-hover:scale-110 transition-transform group-hover:text-blue-500"></i>
-                    <span class="text-[8px] font-bold uppercase tracking-widest group-hover:text-blue-500">เพิ่มรูป</span>
-                    <input id="img" type="file" class="hidden" accept="image/*" multiple onchange="appendImages(this)">
-                </label>
-            </div>
+        <div class="p-4 border-t border-slate-100 bg-white flex-none flex gap-3">
+            <button onclick="closeModal()" class="px-4 py-2 text-slate-500 font-bold text-xs rounded-lg border border-slate-200">ยกเลิก</button>
+            <button onclick="savePost()" id="btnSave" class="flex-1 bg-yellow-500 text-white py-2 rounded-lg font-bold text-sm shadow-[0_3px_0_rgb(161,98,7)] active:shadow-none active:translate-y-[3px] transition-all">
+                <span id="btnSaveText">ยืนยันลงทะเบียน</span> 
+            </button>
         </div>
-    </div>
-    
-    <div class="p-6 md:p-8 border-t border-slate-100 flex gap-4 bg-slate-50">
-        <button onclick="closeModal()" class="flex-1 px-4 py-3 text-slate-500 font-bold text-xs uppercase tracking-widest hover:text-slate-800 transition-colors">ยกเลิก</button>
-        <button onclick="savePost()" id="btnSave" class="btn-primary flex-[2] text-white py-3 rounded-lg font-bold text-xs uppercase tracking-widest shadow-lg btn-animate transition-all">
-            <span id="btnSaveText">ลงทะเบียน</span> 
-        </button>
     </div>
 </dialog>
 
 <!-- Image Slider -->
-<div id="imageSlider" class="fixed inset-0 z-[100] bg-black/95 flex flex-col items-center justify-center slider-hidden transition-all duration-300">
-    <button onclick="closeImageSlider()" class="absolute top-8 right-8 text-white/50 hover:text-white w-12 h-12 flex items-center justify-center bg-white/10 rounded-full z-[110] transition-colors">
-        <i class="fa-solid fa-xmark text-2xl"></i>
-    </button>
-    <div class="relative w-full h-full flex items-center justify-center p-6">
-        <button onclick="changeSlide(-1)" class="absolute left-8 text-white w-12 h-12 hidden md:flex items-center justify-center hover:bg-white/10 rounded-full z-[110] transition-all"><i class="fa-solid fa-chevron-left text-2xl"></i></button>
-        <img id="sliderMainImage" src="" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl transition-all duration-500">
-        <button onclick="changeSlide(1)" class="absolute right-8 text-white w-12 h-12 hidden md:flex items-center justify-center hover:bg-white/10 rounded-full z-[110] transition-all"><i class="fa-solid fa-chevron-right text-2xl"></i></button>
+<div id="imageSlider" class="fixed inset-0 z-[100] bg-black hidden flex-col items-center justify-center">
+    <button onclick="closeImageSlider()" class="absolute top-4 right-4 text-white w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+    <div class="w-full h-full flex items-center justify-center p-2">
+        <button onclick="changeSlide(-1)" class="absolute left-2 text-white w-10 h-10 bg-black/50 rounded-full"><i class="fa-solid fa-chevron-left"></i></button>
+        <img id="sliderMainImage" src="" class="max-w-full max-h-[90vh] object-contain shadow-2xl rounded-lg">
+        <button onclick="changeSlide(1)" class="absolute right-2 text-white w-10 h-10 bg-black/50 rounded-full"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
-    <div class="absolute bottom-12 flex flex-col items-center gap-4 z-[110]">
-        <span id="sliderCounter" class="text-white text-[10px] bg-white/10 px-6 py-2 rounded-full font-mono border border-white/5 tracking-widest uppercase">รูปที่ 1 / 1</span>
-    </div>
+    <div class="absolute bottom-6 text-white text-[10px] bg-black/50 px-4 py-2 rounded-full font-mono tracking-widest"><span id="sliderCounter"></span></div>
 </div>
 
 <script>
-/* SYSTEM INTEGRATION */
+// Backend (เดิม)
 const API_URL = "https://script.google.com/macros/s/AKfycbz2YS70cqQL6ELVYBeIWF2FOerHqC4MiUghgptsVZshL_hRJwPabC6Pxfa1_PKXOChzGw/exec"; 
-
 const PROVINCES = ["กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง", "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์", "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี"].sort();
 
-let posts = [];
-let filteredPosts = [];
-let currentPage = 1;
+let posts = [], filteredPosts = [], currentPage = 1, formImages = [], sliderImages = [], sliderIndex = 0;
 const ITEMS_PER_PAGE = 15; 
-let formImages = [];
-let sliderImages = [];
-let sliderIndex = 0;
+const CACHE_KEY = 'tutor_connect_posts_cache';
 
 const dom = {
     loading: document.getElementById('loading'),
@@ -484,77 +376,97 @@ const dom = {
     sliderImg: document.getElementById('sliderMainImage'),
     sliderCount: document.getElementById('sliderCounter'),
     viewHero: document.getElementById('viewHeroImg'),
-    viewDate: document.getElementById('viewPublishDate'),
     countTutors: document.getElementById('countTutors'),
-    viewPhoneBtnContainer: document.getElementById('viewPhoneBtnContainer')
+    statusDot: document.getElementById('statusDot')
 };
 
-function handleImgError(img) { img.src = 'https://placehold.co/800x600/f1f5f9/94a3b8?text=No+Image'; }
-
-let scrollPosition = 0;
-function setScrollLock(lock) { 
-    if (lock) {
-        scrollPosition = window.pageYOffset;
-        document.body.style.top = `-${scrollPosition}px`;
-        document.body.classList.add('no-scroll');
-    } else {
-        document.body.classList.remove('no-scroll');
-        document.body.style.top = '';
-        window.scrollTo(0, scrollPosition);
-    }
-}
+function handleImgError(img) { img.src = 'https://placehold.co/600x400/f8fafc/cbd5e1?text=TutorConnect'; }
+function setScrollLock(lock) { document.body.classList.toggle('no-scroll', lock); }
 
 function init() {
     populateProvinces();
     loadPosts();
     [dom.qDesktop, dom.qMobile].forEach(el => el.addEventListener('input', debounce(applyFilters, 400)));
-    [dom.filterDesktop, dom.filterMobile].forEach(el => el.addEventListener('change', (e) => {
+    
+    if(dom.filterDesktop) dom.filterDesktop.addEventListener('change', (e) => {
         dom.filterDesktop.value = dom.filterMobile.value = e.target.value;
         applyFilters();
-    }));
+    });
+    dom.filterMobile.addEventListener('change', (e) => {
+        if(dom.filterDesktop) dom.filterDesktop.value = dom.filterMobile.value = e.target.value;
+        applyFilters();
+    });
 }
 
 function populateProvinces() {
     const html = PROVINCES.map(p => `<option value="${p}">${p}</option>`).join('');
-    dom.province.innerHTML = `<option value="">เลือกจังหวัด</option>${html}`;
-    dom.filterDesktop.innerHTML = dom.filterMobile.innerHTML = `<option value="all">ทุกพื้นที่</option>${html}`;
+    dom.province.innerHTML = `<option value="">จังหวัด *</option>${html}`;
+    dom.filterDesktop.innerHTML = `<option value="all">ทุกจังหวัด (All)</option>${html}`;
+    dom.filterMobile.innerHTML = `<option value="all">ทุกพื้นที่</option>${html}`;
 }
 
 async function loadPosts() {
-    dom.loading.classList.remove('hidden');
-    dom.board.innerHTML = '';
+    // โหลดจาก Cache ก่อนเพื่อความเร็ว
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+        posts = JSON.parse(cached);
+        applyFilters();
+    }
+
+    if(dom.loading && posts.length === 0) dom.loading.classList.remove('hidden');
+
     try {
         const res = await fetch(`${API_URL}?t=${Date.now()}`);
+        if (!res.ok) throw new Error('API Error');
         const data = await res.json();
-        posts = (Array.isArray(data) ? data : data.data || []).map(p => {
+        const rawPosts = (Array.isArray(data) ? data : data.data || []);
+        
+        posts = rawPosts.map(p => {
+            // ระบบ Mapping รูปภาพอัจฉริยะ (Smart Image Mapping)
             let imgs = [];
             try {
-                const imgData = p.images;
-                if (typeof imgData === 'string' && imgData.trim().startsWith('[')) imgs = JSON.parse(imgData);
-                else if (imgData && imgData !== "null") imgs = [imgData];
-            } catch(e) { imgs = p.images ? [p.images] : []; }
-            
-            imgs = imgs.map(url => {
-                if (typeof url === 'string' && url.includes('id=')) {
-                    const id = url.split('id=')[1].split('&')[0];
-                    return `https://lh3.googleusercontent.com/d/${id}`;
+              if (Array.isArray(p.images)) imgs = p.images;
+              else if (typeof p.images === 'string') {
+                const s = p.images.trim();
+                if (s.startsWith('[')) imgs = JSON.parse(s);
+                else if (s.startsWith('http')) imgs = [s];
+              }
+            } catch { imgs = []; }
+
+            const processedImages = imgs
+              .filter(u => typeof u === 'string' && u.includes('google'))
+              .map(u => {
+                if (u.includes('/d/') && !u.includes('=')) return u + '=s1000';
+                if (u.includes('id=')) {
+                  const id = u.split('id=')[1].split('&')[0];
+                  return `https://lh3.googleusercontent.com/d/${id}=s1000`;
                 }
-                return url;
-            });
-            return { ...p, images: imgs };
+                return u;
+              });
+            return { ...p, images: processedImages };
         }).reverse();
-        dom.countTutors.textContent = posts.length;
-    } catch (e) { posts = []; } finally {
-        dom.loading.classList.add('hidden');
+
+        localStorage.setItem(CACHE_KEY, JSON.stringify(posts));
+        if(dom.countTutors) dom.countTutors.textContent = posts.length;
+        if(dom.statusDot) {
+            dom.statusDot.classList.replace('bg-gray-400', 'bg-emerald-500');
+            dom.statusDot.classList.add('animate-pulse');
+        }
         applyFilters();
+    } catch (e) {
+        console.warn('Load failed:', e);
+        if(dom.statusDot) dom.statusDot.classList.replace('bg-gray-400', 'bg-red-500');
+    } finally {
+        if(dom.loading) dom.loading.classList.add('hidden');
     }
 }
 
 function applyFilters() {
     const q = (dom.qDesktop.value || dom.qMobile.value).toLowerCase();
     const prov = dom.filterDesktop.value;
+    
     filteredPosts = posts.filter(p => {
-        const matchText = (String(p.title)+String(p.body)+String(p.province)).toLowerCase().includes(q);
+        const matchText = (String(p.title)+String(p.body)).toLowerCase().includes(q);
         const matchProv = prov === 'all' || p.province === prov;
         return matchText && matchProv;
     });
@@ -568,50 +480,28 @@ function renderBoard() {
     const items = filteredPosts.slice(start, start + ITEMS_PER_PAGE);
     
     if (items.length === 0) {
-        dom.board.innerHTML = `<div class="col-span-full py-20 text-center text-slate-500 italic text-sm tracking-widest">ไม่พบข้อมูลติวเตอร์ที่ค้นหา</div>`;
+        dom.board.innerHTML = `<div class="col-span-full py-16 text-center text-slate-400 text-xs italic">ไม่พบข้อมูลติวเตอร์ในพื้นที่นี้</div>`;
     } else {
         items.forEach(p => {
-            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x500/f1f5f9/94a3b8?text=No+Image';
+            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x500/f1f5f9/cbd5e1?text=TutorConnect';
             const card = document.createElement('div');
-            card.className = "tutor-card rounded-xl overflow-hidden flex flex-col cursor-pointer transition-all duration-300 group bg-white";
+            card.className = "tutor-card rounded-lg overflow-hidden cursor-pointer flex flex-col group border border-slate-100";
             card.onclick = () => viewDetail(p.id);
-            
-            // ตรวจสอบเบอร์โทรและสร้างปุ่มโทรสำหรับการ์ดด้านนอก
-            const phoneStr = String(p.phone || "").trim();
-            const hasPhone = phoneStr.length > 0;
-            const cleanPhone = phoneStr.replace(/[^0-9+]/g, '');
-            
-            let phoneButtonHtml = '';
-            if (hasPhone) {
-                phoneButtonHtml = `
-                    <div class="mb-3 relative z-20">
-                        <a href="tel:${cleanPhone}" onclick="event.stopPropagation()" class="btn-call-gradient inline-flex items-center justify-center w-full py-2.5 rounded-lg transition-all duration-300 text-xs font-bold gap-2 hover:scale-[1.02] active:scale-95">
-                            <i class="fa-solid fa-phone"></i>
-                            โทรติดต่อ ${phoneStr}
-                        </a>
-                    </div>
-                `;
-            }
-
             card.innerHTML = `
-                <div class="aspect-[4/5] bg-slate-100 overflow-hidden relative">
-                    <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/400x500/f1f5f9/94a3b8?text=No+Image'">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent opacity-60"></div>
-                    <div class="absolute bottom-3 left-3">
-                        <span class="bg-white/95 backdrop-blur-sm px-2 py-0.5 rounded text-[9px] font-bold text-slate-800 uppercase tracking-wider shadow-sm border border-white">${p.province}</span>
+                <div class="aspect-[4/5] bg-slate-100 relative overflow-hidden">
+                    <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" onerror="this.src='https://placehold.co/400x500/f1f5f9/cbd5e1?text=TutorConnect'">
+                    <div class="absolute bottom-2 left-2 flex flex-wrap gap-1">
+                        <span class="bg-blue-600/90 backdrop-blur-sm text-white px-1.5 py-0.5 rounded text-[8px] font-bold uppercase">${p.province}</span>
                     </div>
                 </div>
-                <div class="p-4 flex flex-col flex-grow">
-                    <h3 class="font-bold text-slate-800 text-sm line-clamp-2 leading-tight mb-3 h-10 group-hover:text-blue-600 transition-colors">${p.title}</h3>
-                    
-                    ${phoneButtonHtml}
-
-                    <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-slate-900 font-black text-base">฿${Number(p.price).toLocaleString()}</span>
-                            <span class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">/ ชม.</span>
+                <div class="p-3 flex flex-col flex-grow bg-white">
+                    <h3 class="font-bold text-slate-800 text-[12px] line-clamp-2 leading-snug h-8 mb-2 group-hover:text-yellow-600 transition-colors">${p.title}</h3>
+                    <div class="mt-auto pt-2 border-t border-slate-50 flex items-center justify-between">
+                        <div class="flex items-baseline gap-0.5">
+                            <span class="text-slate-900 font-black text-xs">฿${Number(p.price).toLocaleString()}</span>
+                            <span class="text-[8px] text-slate-400">/ชม.</span>
                         </div>
-                        <i class="fa-solid fa-arrow-right-long text-[10px] text-slate-400 group-hover:translate-x-1 transition-transform group-hover:text-blue-600"></i>
+                        <i class="fa-solid fa-arrow-right-long text-[9px] text-slate-300 group-hover:translate-x-1 transition-transform"></i>
                     </div>
                 </div>
             `;
@@ -628,52 +518,50 @@ function updatePagination() {
     dom.btnNext.disabled = currentPage === total;
 }
 
-function changePage(delta) { currentPage += delta; renderBoard(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function changePage(delta) { currentPage += delta; renderBoard(); window.scrollTo({ top: 0, behavior: 'auto' }); }
 function openNewPostModal() { resetForm(); dom.dlg.showModal(); setScrollLock(true); }
 function closeModal() { dom.dlg.close(); setScrollLock(false); }
 
 function viewDetail(id) {
-    const p = posts.find(x => x.id === id);
+    const p = posts.find(x => x.id == id);
     if (!p) return;
-    dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/800x600/f1f5f9/94a3b8?text=No+Image';
-    document.getElementById('viewTitle').textContent = p.title;
-    document.getElementById('viewPrice').textContent = `฿${Number(p.price).toLocaleString()}`;
-    document.getElementById('viewContact').textContent = p.contact_name || '-';
-    document.getElementById('viewProvince').textContent = p.province;
-    document.getElementById('viewAddress').textContent = p.address || 'สถานที่ตามตกลง';
-    document.getElementById('viewBody').textContent = p.body || 'ไม่มีรายละเอียดเพิ่มเติม';
-    document.getElementById('viewPublishDate').textContent = `เผยแพร่เมื่อ: ${new Date(p.id).toLocaleDateString('th-TH')}`;
     
-    // จัดการปุ่มโทรศัพท์แบบไอคอนเล็กๆ ในหน้ารายละเอียด
-    const phoneStr = String(p.phone || "").trim();
-    if (phoneStr.length > 0) {
-        const cleanPhone = phoneStr.replace(/[^0-9+]/g, '');
-        dom.viewPhoneBtnContainer.innerHTML = `
-            <a href="tel:${cleanPhone}" class="btn-call-icon" title="โทรหา ${phoneStr}">
-                <i class="fa-solid fa-phone text-lg animate-pulse"></i>
-            </a>
-        `;
-    } else {
-        dom.viewPhoneBtnContainer.innerHTML = '';
+    dom.viewHero.src = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/600x400/f1f5f9/cbd5e1?text=No+Image';
+    document.getElementById('viewTitle').textContent = p.title;
+    document.getElementById('viewPrice').textContent = Number(p.price).toLocaleString();
+    document.getElementById('viewContact').textContent = p.contact_name || 'ติวเตอร์พาร์ทเนอร์';
+    
+    // ระบบจัดการเบอร์โทรศัพท์ (Phone Sanitization)
+    const rawPhone = String(p.phone || '');
+    const cleanPhone = rawPhone.replace(/[^0-9]/g, ''); 
+    const telLink = cleanPhone ? `tel:${cleanPhone}` : '#';
+    const phoneEl = document.getElementById('viewPhoneShow');
+    if (phoneEl) {
+        phoneEl.textContent = rawPhone || 'ไม่ได้ระบุเบอร์';
+        phoneEl.href = telLink;
     }
+
+    document.getElementById('viewProvince').querySelector('span').textContent = p.province;
+    document.getElementById('viewAddress').querySelector('span').textContent = p.address || 'สถานที่ตามตกลง';
+    document.getElementById('viewBody').textContent = p.body || '-';
+    document.getElementById('btnCall').href = telLink;
     
     const imgBox = document.getElementById('viewImages');
     imgBox.innerHTML = '';
     sliderImages = p.images || [];
-    
-    if (sliderImages.length > 0) {
-        sliderImages.forEach((url, i) => {
-            const img = document.createElement('img');
-            img.src = url;
-            img.className = `h-10 w-14 rounded-md object-cover border transition-all cursor-pointer flex-shrink-0 ${i===0?'border-blue-500 shadow-sm ring-2 ring-blue-100':'border-slate-200 opacity-70 hover:opacity-100'}`;
-            img.onclick = (e) => { e.stopPropagation(); openSlider(i); };
-            imgBox.appendChild(img);
-        });
-    } else {
-        imgBox.innerHTML = '<span class="text-[10px] text-slate-400 px-2">ไม่มีรูปเพิ่มเติม</span>';
-    }
+    sliderImages.forEach((url, i) => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.className = `h-10 w-14 rounded object-cover border border-slate-200 cursor-pointer flex-shrink-0 ${i===0?'ring-2 ring-yellow-400':''}`;
+        img.onclick = (e) => { e.stopPropagation(); openSlider(i); };
+        imgBox.appendChild(img);
+    });
 
     document.getElementById('btnDeletePost').onclick = (e) => { e.stopPropagation(); confirmDelete(p.id); };
+    const btnDeleteMobile = document.getElementById('btnDeletePostMobile');
+    if(btnDeleteMobile) btnDeleteMobile.onclick = (e) => { e.stopPropagation(); confirmDelete(p.id); };
+
+    if (dom.viewDlg.open) dom.viewDlg.close();
     dom.viewDlg.showModal();
     setScrollLock(true);
 }
@@ -681,47 +569,32 @@ function viewDetail(id) {
 function closeViewModal() { dom.viewDlg.close(); setScrollLock(false); }
 
 async function confirmDelete(id) {
-    dom.viewDlg.close(); 
-    const res = await Swal.fire({
-        title: 'ยืนยันการลบ?',
-        text: 'ข้อมูลจะถูกลบถาวร',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#64748b',
-        confirmButtonText: 'ลบข้อมูล',
-        cancelButtonText: 'ยกเลิก',
-        background: '#ffffff',
-        color: '#0f172a'
+    closeViewModal(); 
+    const res = await Swal.fire({ 
+        title: 'ยืนยันการลบประกาศ?', 
+        icon: 'warning', 
+        showCancelButton: true, 
+        confirmButtonColor: '#0f172a', 
+        confirmButtonText: 'ลบข้อมูล', 
+        cancelButtonText: 'ยกเลิก' 
     });
     if (res.isConfirmed) {
-        Swal.fire({ title: 'กำลังดำเนินการ...', allowOutsideClick: false, background: '#ffffff', color: '#0f172a', didOpen: () => Swal.showLoading() });
+        Swal.fire({ title: 'กำลังดำเนินการ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
         try {
-            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: id }) });
-            setTimeout(() => { 
-                loadPosts(); 
-                Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', background: '#ffffff', color: '#0f172a', showConfirmButton: false, timer: 1500 }); 
-                setScrollLock(false);
-            }, 1500);
-        } catch (e) { 
-            Swal.fire('ผิดพลาด', 'ลบข้อมูลไม่สำเร็จ', 'error'); 
-            setScrollLock(false);
-        }
-    } else {
-        setScrollLock(false);
+            // ระบบ No-Cors สำหรับ GAS Backend
+            await fetch(API_URL, { 
+                method: 'POST', 
+                mode: 'no-cors',
+                body: JSON.stringify({ action: 'delete', id: id }) 
+            });
+            setTimeout(() => { loadPosts(); Swal.fire({ icon: 'success', title: 'ลบสำเร็จ', timer: 1000, showConfirmButton: false }); }, 1000);
+        } catch (e) { Swal.fire('Error', 'ไม่สามารถลบข้อมูลได้', 'error'); }
     }
 }
 
 function appendImages(input) {
     const files = Array.from(input.files);
-    const remainingSlots = 3 - formImages.length;
-    
-    if (remainingSlots <= 0) {
-        Swal.fire({ icon: 'warning', title: 'ครบจำนวนแล้ว', text: 'สูงสุด 3 รูป', toast: true, position: 'top', background: '#ffffff', color: '#0f172a', timer: 2000, showConfirmButton: false });
-        return;
-    }
-
-    files.slice(0, remainingSlots).forEach(file => {
+    files.slice(0, 3 - formImages.length).forEach(file => {
         const reader = new FileReader();
         reader.onload = (e) => { formImages.push(e.target.result); renderPreview(); };
         reader.readAsDataURL(file);
@@ -732,12 +605,12 @@ function renderPreview() {
     dom.imgPreview.innerHTML = '';
     formImages.forEach((src, i) => {
         const div = document.createElement('div');
-        div.className = "relative aspect-square rounded-lg overflow-hidden border border-slate-200 shadow-sm";
+        div.className = "relative aspect-square rounded overflow-hidden border border-slate-200 shadow-sm";
         div.innerHTML = `<img src="${src}" class="w-full h-full object-cover">
-            <button onclick="removeImg(${i})" class="absolute top-1 right-1 bg-white text-red-500 w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-md hover:bg-red-50 transition-colors"><i class="fa-solid fa-trash"></i></button>`;
+            <button onclick="removeImg(${i})" class="absolute top-1 right-1 bg-red-500 text-white w-4 h-4 rounded-full flex items-center justify-center text-[8px]"><i class="fa-solid fa-xmark"></i></button>`;
         dom.imgPreview.appendChild(div);
     });
-    dom.imgCount.textContent = `${formImages.length} / 3`;
+    dom.imgCount.textContent = `${formImages.length}/3`;
     dom.uploadBtn.classList.toggle('hidden', formImages.length >= 3);
 }
 
@@ -746,78 +619,55 @@ function removeImg(i) { formImages.splice(i, 1); renderPreview(); }
 async function savePost() {
     const validations = [dom.title, dom.price, dom.province, dom.phone];
     let ok = true;
-    let firstError = null;
-
     validations.forEach(el => {
-        if (!el.value.trim()) { 
-            el.classList.add('field-error'); 
-            ok = false; 
-            if(!firstError) firstError = el;
-        }
+        if (!el.value.trim()) { el.classList.add('field-error'); ok = false; }
         else el.classList.remove('field-error');
     });
-
-    if (!ok) {
-        if(firstError) {
-             firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-             firstError.focus();
-        }
-        Swal.fire({ 
-            title: 'ข้อมูลไม่ครบถ้วน', 
-            text: 'กรุณากรอกข้อมูลที่จำเป็นให้ครบ', 
-            icon: 'warning', 
-            toast: true, 
-            position: 'top', 
-            showConfirmButton: false, 
-            timer: 2000,
-            background: '#ffffff', 
-            color: '#0f172a'
-        });
-        return;
-    }
+    if (!ok) return Swal.fire({ icon: 'error', title: 'ข้อมูลไม่ครบ', text: 'กรุณากรอกข้อมูลที่จำเป็น (*)', timer: 1500, showConfirmButton: false });
 
     const btn = document.getElementById('btnSave');
-    btn.disabled = true;
-    dom.btnSaveText.textContent = "กำลังบันทึก...";
-    
-    const payload = {
-        action: 'add', id: Date.now(), title: dom.title.value, price: Number(dom.price.value),
-        province: dom.province.value, address: dom.address.value, contact_name: dom.contactName.value,
-        phone: dom.phone.value, body: dom.body.value, images: formImages
-    };
+    btn.disabled = true; dom.btnSaveText.textContent = "กำลังส่งข้อมูล...";
     
     try {
-        await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+        await fetch(API_URL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            body: JSON.stringify({
+                action: 'add', id: Date.now(), title: dom.title.value, price: Number(dom.price.value), 
+                province: dom.province.value, district: "", address: dom.address.value, 
+                contact_name: dom.contactName.value, phone: dom.phone.value, body: dom.body.value, 
+                images: formImages
+            })
+        });
         closeModal();
-        Swal.fire({ title: 'สำเร็จ', text: 'บันทึกข้อมูลเรียบร้อย', icon: 'success', background: '#ffffff', color: '#0f172a' });
+        Swal.fire({ title: 'สำเร็จ', text: 'ลงทะเบียนติวเตอร์เรียบร้อย', icon: 'success', timer: 2000, showConfirmButton: false });
         setTimeout(() => loadPosts(), 1500);
-    } catch (e) { Swal.fire('ผิดพลาด', 'บันทึกไม่สำเร็จ', 'error'); } 
-    finally { btn.disabled = false; dom.btnSaveText.textContent = "ลงทะเบียน"; }
+    } catch (e) { Swal.fire('Error', 'บันทึกไม่สำเร็จ', 'error'); } 
+    finally { btn.disabled = false; dom.btnSaveText.textContent = "ยืนยันลงทะเบียน"; }
 }
 
 function openSlider(i) {
     sliderIndex = i;
     dom.sliderImg.src = sliderImages[i];
-    dom.sliderCount.textContent = `รูปที่ ${i + 1} / ${sliderImages.length}`;
-    if (dom.viewDlg.open) dom.viewDlg.close();
-    dom.slider.classList.replace('slider-hidden', 'slider-visible');
+    dom.sliderCount.textContent = `${i + 1} / ${sliderImages.length}`;
+    if(dom.viewDlg.open) dom.viewDlg.close();
+    dom.slider.classList.remove('hidden'); dom.slider.classList.add('flex');
+    setScrollLock(true);
 }
 
 function closeImageSlider() { 
-    dom.slider.classList.replace('slider-visible', 'slider-hidden'); 
-    dom.viewDlg.showModal(); 
+    dom.slider.classList.add('hidden'); 
+    dom.slider.classList.remove('flex'); 
+    dom.viewDlg.showModal();
 }
 
 function changeSlide(n) {
     sliderIndex = (sliderIndex + n + sliderImages.length) % sliderImages.length;
     dom.sliderImg.src = sliderImages[sliderIndex];
-    dom.sliderCount.textContent = `รูปที่ ${sliderIndex + 1} / ${sliderImages.length}`;
+    dom.sliderCount.textContent = `${sliderIndex + 1} / ${sliderImages.length}`;
 }
 
-function debounce(fn, t) {
-    let timer;
-    return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), t); };
-}
+function debounce(fn, t) { let timer; return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), t); }; }
 
 function resetForm() {
     dom.title.value = dom.price.value = dom.province.value = dom.contactName.value = dom.phone.value = dom.address.value = dom.body.value = '';
@@ -826,9 +676,9 @@ function resetForm() {
 }
 
 function refreshApp() {
-    dom.qDesktop.value = dom.qMobile.value = '';
-    dom.filterDesktop.value = dom.filterMobile.value = 'all';
+    dom.qDesktop.value = dom.qMobile.value = dom.filterDesktop.value = dom.filterMobile.value = 'all';
     loadPosts();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 init();
