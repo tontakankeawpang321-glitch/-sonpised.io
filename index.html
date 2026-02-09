@@ -31,6 +31,7 @@
             -webkit-tap-highlight-color: transparent; 
             overflow-x: hidden;
             letter-spacing: -0.01em;
+            padding-bottom: 80px; /* เผื่อพื้นที่ให้ Bottom Nav */
         }
 
         body.no-scroll { overflow: hidden; }
@@ -104,11 +105,19 @@
         }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* Animation for Heart */
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .heart-beat { animation: heartBeat 0.3s ease-in-out; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-<!-- Navigation -->
+<!-- Navigation (Top) -->
 <nav class="nav-solid sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
       <!-- Logo Area -->
@@ -135,8 +144,8 @@
              </div>
          </div>
 
-         <!-- Register Button -->
-         <button onclick="openNewPostModal()" class="bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-[0_3px_0_rgb(180,130,0)] active:shadow-none active:translate-y-[3px] transition-all flex items-center gap-2 border border-yellow-600">
+         <!-- Register Button (Desktop Only) -->
+         <button onclick="openNewPostModal()" class="hidden lg:flex bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-[0_3px_0_rgb(180,130,0)] active:shadow-none active:translate-y-[3px] transition-all items-center gap-2 border border-yellow-600">
             <i class="fa-solid fa-plus text-xs drop-shadow-sm"></i> 
             <span>ลงทะเบียน</span>
          </button>
@@ -193,7 +202,30 @@
     </div>
 </main>
 
-<footer class="bg-blue-950 text-slate-500 py-8 px-4 border-t border-blue-900 text-center">
+<!-- Bottom Navigation (App Style) -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 h-16 flex items-center justify-around z-50 lg:hidden shadow-[0_-4px_10px_rgba(0,0,0,0.03)] pb-safe">
+    <button onclick="refreshApp()" class="flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-blue-900 active:text-blue-900 w-16 transition-colors">
+        <i class="fa-solid fa-house text-xl mb-0.5"></i>
+        <span class="text-[9px] font-bold">หน้าแรก</span>
+    </button>
+    
+    <button onclick="openNewPostModal()" class="flex flex-col items-center justify-center gap-1 w-16 group">
+        <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center shadow-lg shadow-blue-900/30 -mt-8 border-4 border-white text-white group-active:scale-95 transition-transform">
+            <i class="fa-solid fa-plus text-xl"></i>
+        </div>
+        <span class="text-[9px] font-bold text-slate-500 group-hover:text-blue-900">ลงประกาศ</span>
+    </button>
+    
+    <button onclick="openFavorites()" class="flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-red-500 active:text-red-500 w-16 transition-colors">
+        <div class="relative">
+            <i class="fa-solid fa-heart text-xl mb-0.5"></i>
+            <span id="navFavCount" class="absolute -top-1 -right-2 bg-red-500 text-white text-[8px] font-bold px-1 rounded-full hidden">0</span>
+        </div>
+        <span class="text-[9px] font-bold">รายการโปรด</span>
+    </button>
+</nav>
+
+<footer class="bg-blue-950 text-slate-500 py-8 px-4 border-t border-blue-900 text-center pb-24 lg:pb-8">
     <i class="fa-solid fa-certificate text-yellow-600 text-2xl mb-2 icon-3d"></i>
     <p class="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Verified Professional Tutors</p>
     <p class="text-[10px]">© 2024 Tutor Connect Solution.</p>
@@ -270,6 +302,25 @@
                 <a id="btnCall" href="#" class="w-full bg-blue-900 hover:bg-blue-800 text-white py-3 rounded-lg font-bold text-sm shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2">
                     <i class="fa-solid fa-phone text-yellow-400 icon-3d"></i> ติดต่อติวเตอร์
                 </a>
+            </div>
+        </div>
+    </div>
+</dialog>
+
+<!-- Favorites Dialog -->
+<dialog id="favDlg" class="w-full max-w-lg p-0 rounded-xl overflow-hidden bg-white shadow-2xl h-[80vh] sm:h-auto">
+    <div class="flex flex-col h-full">
+        <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-white flex-none">
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-heart text-red-500 icon-3d"></i> รายการโปรดของคุณ
+            </h3>
+            <button onclick="closeFavorites()" class="text-slate-400 hover:text-slate-900 w-8 h-8 rounded-full active:bg-slate-50"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <div class="p-4 overflow-y-auto flex-grow bg-slate-50">
+            <div id="favList" class="grid grid-cols-2 gap-3"></div>
+            <div id="favEmpty" class="hidden flex flex-col items-center justify-center h-full text-slate-400 py-10">
+                <i class="fa-regular fa-heart text-4xl mb-3 opacity-30"></i>
+                <p class="text-xs">ยังไม่มีรายการโปรด</p>
             </div>
         </div>
     </div>
@@ -356,6 +407,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycbz2YS70cqQL6ELVYBeIWF2F
 const PROVINCES = ["กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี", "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงราย", "เชียงใหม่", "ตรัง", "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์", "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อำนาจเจริญ", "อุดรธานี", "อุตรดิตถ์", "อุทัยธานี", "อุบลราชธานี"].sort();
 
 let posts = [], filteredPosts = [], currentPage = 1, formImages = [], sliderImages = [], sliderIndex = 0;
+// Favorites Logic
+let favorites = JSON.parse(localStorage.getItem('tutor_favorites') || '[]');
+
 const ITEMS_PER_PAGE = 15; 
 const CACHE_KEY = 'tutor_connect_posts_cache_v5_line';
 
@@ -367,13 +421,17 @@ const dom = {
     btnNext: document.getElementById('btnNext'),
     dlg: document.getElementById('dlg'),
     viewDlg: document.getElementById('viewDlg'),
+    favDlg: document.getElementById('favDlg'), // Favorites Dialog
+    favList: document.getElementById('favList'),
+    favEmpty: document.getElementById('favEmpty'),
+    navFavCount: document.getElementById('navFavCount'),
     btnSaveText: document.getElementById('btnSaveText'),
     title: document.getElementById('title'),
     price: document.getElementById('price'),
     province: document.getElementById('input_province'),
     contactName: document.getElementById('contact_name'),
     phone: document.getElementById('phone'),
-    lineId: document.getElementById('line_id'), // ✅ เพิ่ม DOM Line ID
+    lineId: document.getElementById('line_id'), 
     address: document.getElementById('address'),
     body: document.getElementById('body'),
     imgPreview: document.getElementById('previewList'),
@@ -396,6 +454,7 @@ function setScrollLock(lock) { document.body.classList.toggle('no-scroll', lock)
 
 function init() {
     populateProvinces();
+    updateFavCount();
     loadPosts();
     [dom.qDesktop, dom.qMobile].forEach(el => el.addEventListener('input', debounce(applyFilters, 400)));
     
@@ -482,6 +541,83 @@ function applyFilters() {
     renderBoard();
 }
 
+// Favorites Functions
+function toggleFavorite(id) {
+    const strId = String(id);
+    const index = favorites.indexOf(strId);
+    if (index === -1) {
+        favorites.push(strId);
+    } else {
+        favorites.splice(index, 1);
+    }
+    localStorage.setItem('tutor_favorites', JSON.stringify(favorites));
+    updateFavCount();
+    
+    // Update Icons
+    const icon = document.getElementById(`fav-icon-${strId}`);
+    if (icon) {
+        icon.className = `${favorites.includes(strId) ? 'fa-solid text-red-500 heart-beat' : 'fa-regular text-slate-400'} fa-heart text-sm`;
+    }
+    
+    // Refresh Fav Dialog if open
+    if (dom.favDlg.open) renderFavorites();
+}
+
+function isFavorite(id) {
+    return favorites.includes(String(id));
+}
+
+function updateFavCount() {
+    if(dom.navFavCount) {
+        dom.navFavCount.textContent = favorites.length;
+        dom.navFavCount.classList.toggle('hidden', favorites.length === 0);
+    }
+}
+
+function openFavorites() {
+    renderFavorites();
+    dom.favDlg.showModal();
+    setScrollLock(true);
+}
+
+function closeFavorites() {
+    dom.favDlg.close();
+    setScrollLock(false);
+}
+
+function renderFavorites() {
+    const favPosts = posts.filter(p => favorites.includes(String(p.id)));
+    dom.favList.innerHTML = '';
+    
+    if (favPosts.length === 0) {
+        dom.favEmpty.classList.remove('hidden');
+        dom.favList.classList.add('hidden');
+    } else {
+        dom.favEmpty.classList.add('hidden');
+        dom.favList.classList.remove('hidden');
+        
+        favPosts.forEach(p => {
+            const thumb = (p.images && p.images.length > 0) ? p.images[0] : 'https://placehold.co/400x500/f1f5f9/cbd5e1?text=TutorConnect';
+            const el = document.createElement('div');
+            el.className = "bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm relative";
+            el.onclick = () => viewDetail(p.id);
+            el.innerHTML = `
+                <div class="aspect-square bg-slate-100 relative">
+                    <img src="${thumb}" class="w-full h-full object-cover">
+                    <button class="absolute top-1 right-1 w-6 h-6 bg-white/80 rounded-full flex items-center justify-center" onclick="event.stopPropagation(); toggleFavorite('${p.id}')">
+                        <i class="fa-solid fa-heart text-red-500 text-xs"></i>
+                    </button>
+                </div>
+                <div class="p-2">
+                    <h4 class="text-[10px] font-bold text-slate-800 line-clamp-1">${p.title}</h4>
+                    <div class="text-[9px] text-blue-600 font-bold mt-1">฿${Number(p.price).toLocaleString()}</div>
+                </div>
+            `;
+            dom.favList.appendChild(el);
+        });
+    }
+}
+
 function renderBoard() {
     dom.board.innerHTML = '';
     const start = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -498,6 +634,11 @@ function renderBoard() {
             card.innerHTML = `
                 <div class="aspect-[4/5] bg-slate-100 relative overflow-hidden">
                     <img src="${thumb}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" onerror="this.src='https://placehold.co/400x500/f1f5f9/cbd5e1?text=TutorConnect'">
+                    
+                    <button class="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-sm transition-all active:scale-95 hover:bg-white" onclick="event.stopPropagation(); toggleFavorite('${p.id}')">
+                        <i class="${isFavorite(p.id) ? 'fa-solid text-red-500' : 'fa-regular text-slate-400'} fa-heart text-sm" id="fav-icon-${p.id}"></i>
+                    </button>
+
                     <div class="absolute bottom-2 left-2 flex flex-wrap gap-1">
                         <span class="bg-blue-900/90 backdrop-blur-sm text-white px-1.5 py-0.5 rounded text-[8px] font-bold uppercase border border-blue-800">${p.province}</span>
                     </div>
